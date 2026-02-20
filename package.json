@@ -1,0 +1,95 @@
+{
+  "name": "@coston/design-tokens",
+  "version": "0.1.0",
+  "description": "Centralized design tokens for modern web applications",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind.css": "./dist/tailwind.css",
+    "./tokens.json": "./dist/tokens.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "default": "./dist/utils.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "tsx src/build/index.ts",
+    "build:all": "npm run build && npm run demo:build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint 'src/**/*.{ts,tsx}' 'tests/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' 'tests/**/*.{ts,tsx}' --fix",
+    "format": "prettier --write 'src/**/*.{ts,tsx,json}' 'tests/**/*.{ts,tsx}'",
+    "format:check": "prettier --check 'src/**/*.{ts,tsx,json}' 'tests/**/*.{ts,tsx}'",
+    "type-check": "tsc --noEmit",
+    "theme:generate": "tsx -e \"import {generateThemeFromColor} from './src/build/utils/theme-generator.ts'; import {writeFileSync} from 'fs'; const baseColor = process.argv[1] || 'oklch(0.6 0.12 280)'; const name = process.argv[2] || 'generated'; const theme = generateThemeFromColor({baseColor}); writeFileSync(name + '-light.json', JSON.stringify(theme.light, null, 2)); writeFileSync(name + '-dark.json', JSON.stringify(theme.dark, null, 2)); console.log('✓ Generated', name + '-light.json', 'and', name + '-dark.json');\"",
+    "scale:generate": "tsx -e \"import {generateColorScale} from './src/build/utils/color-utils.ts'; import {writeFileSync} from 'fs'; const baseColor = process.argv[1] || 'oklch(0.6 0.15 240)'; const name = process.argv[2] || 'scale'; const scale = generateColorScale(baseColor); writeFileSync(name + '.json', JSON.stringify(scale, null, 2)); console.log('✓ Generated', name + '.json');\"",
+    "demo:install": "npm install --prefix demo",
+    "demo:dev": "npm run dev --prefix demo",
+    "demo:build": "npm run build --prefix demo",
+    "demo:preview": "npm run preview --prefix demo",
+    "prepare": "husky",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2",
+    "@eslint/js": "^9.39.3",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "@vitest/coverage-v8": "^1.6.1",
+    "eslint": "^9.39.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^1.2.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
+  },
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "css-variables",
+    "tailwind",
+    "oklch",
+    "theming"
+  ],
+  "author": "",
+  "license": "MIT"
+}
