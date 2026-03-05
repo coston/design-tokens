@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Optional Tailwind v4 integration
   - TypeScript definitions included
 - **Demo Application** - Interactive showcase with React + Tailwind
+  - Live demo: https://coston.github.io/design-tokens/
   - Component examples
   - Theme switching
   - Token visualizer
@@ -52,4 +53,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **demo/README.md** - Framework integration guides
 - **CHANGELOG.md** - Version history
 
-[0.1.0]: https://github.com/yourusername/design-tokens/releases/tag/v0.1.0
+[0.1.0]: https://github.com/coston/design-tokens/releases/tag/v0.1.0

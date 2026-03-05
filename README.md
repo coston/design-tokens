@@ -5,7 +5,7 @@ Production-ready CSS design tokens built with OKLCH colors. Framework-agnostic, 
 ## Features
 
 - **Pure CSS Variables** - Zero runtime, works everywhere
-- **OKLCH Colors** - Perceptually uniform, mathematically sound (see [COLOR-THEORY.md](COLOR-THEORY.md))
+- **OKLCH Colors** - Perceptually uniform, mathematically sound (see [resources/color-theory.md](resources/color-theory.md))
 - **Gamut-Aware** - Automatic sRGB gamut mapping ensures all colors are displayable
 - **Semantic Tokens** - `primary`, `secondary`, `muted`, etc. work across light/dark themes
 - **Framework Agnostic** - React, Vue, Svelte, Angular, vanilla JS, or any CSS
@@ -94,8 +94,6 @@ document.documentElement.dataset.theme = 'forest';
 document.documentElement.dataset.theme = 'purple';
 document.documentElement.classList.add('dark');
 ```
-
-See [examples/alternative-themes-demo.md](examples/alternative-themes-demo.md) for live examples.
 
 ## Available Tokens
 
@@ -231,7 +229,11 @@ oklchToHex('oklch(0.6 0.2 280)'); // "#7b4eff"
 
 ## Demo
 
-See the [demo/](./demo) directory for a complete React + Tailwind implementation.
+**[🎨 View Live Demo](https://coston.github.io/design-tokens/)**
+
+Interactive showcase with component examples, theme switching, and token visualization.
+
+See the [demo/](./demo) directory for the source code and local development:
 
 ```bash
 npm install && npm run build

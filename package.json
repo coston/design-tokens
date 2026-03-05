@@ -90,6 +90,14 @@
     "oklch",
     "theming"
   ],
+  "homepage": "https://coston.github.io/design-tokens/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coston/design-tokens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coston/design-tokens/issues"
+  },
   "author": "",
   "license": "MIT"
 }
