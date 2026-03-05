@@ -7,72 +7,25 @@ on:
     branches: [main, develop]
 
 jobs:
-  lint:
-    name: Lint
+  quality:
+    name: Quality Checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run type-check
+      - run: npm run build
+      - run: npm test
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Check formatting
-        run: npm run format:check
-
-      - name: Lint code
-        run: npm run lint
-
-      - name: Type check
-        run: npm run type-check
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build package
-        run: npm run build
-
-      - name: Run tests
-        run: npm test
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build package
-        run: npm run build
-
-      - name: Check build artifacts
+      - name: Verify build artifacts
         run: |
-          test -f dist/index.js || (echo "dist/index.js not found" && exit 1)
-          test -f dist/index.d.ts || (echo "dist/index.d.ts not found" && exit 1)
-          test -f dist/tokens.css || (echo "dist/tokens.css not found" && exit 1)
-          test -f dist/tokens.json || (echo "dist/tokens.json not found" && exit 1)
+          test -f dist/index.js
+          test -f dist/index.d.ts
+          test -f dist/tokens.css
+          test -f dist/tokens.json
