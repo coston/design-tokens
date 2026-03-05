@@ -7,6 +7,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // Demo-specific: import internal utilities (not part of public API)
+      '@internal/color-utils': path.resolve(__dirname, '../src/build/utils/color-utils.ts'),
+      '@internal/contrast': path.resolve(__dirname, '../src/build/utils/contrast-validation.ts'),
     },
   },
   base: process.env.GITHUB_PAGES ? '/design-tokens/' : '/',

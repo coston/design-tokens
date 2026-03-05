@@ -125,112 +125,32 @@ console.log(tokens.semantic.primary); // "oklch(0.530 0.186 255)"
 console.log(tokens.themes.dark.background); // "oklch(0.137 0 0)"
 ```
 
-Import utilities from the main package:
+## Advanced: Custom Theme Generation
 
-```typescript
-import { lighten, darken, generateThemeFromColor } from '@coston/design-tokens';
-```
-
-## Advanced Features
-
-### Theme Generation
-
-Generate complete themes from a single brand color using mathematical color theory:
+Generate a complete custom theme from your brand color:
 
 ```typescript
 import { generateThemeFromColor } from '@coston/design-tokens';
 
 const theme = generateThemeFromColor({
-  baseColor: 'oklch(0.6 0.08 300)', // Your brand color (required)
-  hueRange: 20, // Optional: Keep colors within ±20° hue (default: 60)
+  baseColor: 'oklch(0.6 0.15 280)', // Your brand color
+  hueRange: 30, // Optional: hue variation range (default: 60)
 });
 
 // Returns { light: {...}, dark: {...} }
-console.log(theme.light.primary); // "oklch(0.530 0.186 300)"
+// Each contains all semantic tokens (primary, secondary, etc.)
+console.log(theme.light.primary); // "oklch(0.530 0.186 280)"
 console.log(theme.dark.background); // "oklch(0.137 0 0)"
 ```
 
-**Generate theme files (for package developers):**
-
-```bash
-# Generate theme files from a base color
-npm run theme:generate "oklch(0.6 0.15 240)" my-theme
-# Creates: my-theme-light.json, my-theme-dark.json
-
-# With defaults
-npm run theme:generate
-# Creates: generated-light.json, generated-dark.json
-```
-
-### Color Scale Generation
-
-Create perceptually uniform color scales (50-950):
-
-```typescript
-import { generateColorScale } from '@coston/design-tokens';
-
-const scale = generateColorScale('oklch(0.6 0.2 280)');
-// Returns: { 50: 'oklch(...)', 100: 'oklch(...)', ..., 950: 'oklch(...)' }
-
-console.log(scale[500]); // Base color
-console.log(scale[900]); // Very dark variant
-```
-
-**Generate scale files (for package developers):**
-
-```bash
-# Generate color scale from a base color
-npm run scale:generate "oklch(0.65 0.2 150)" green-scale
-# Creates: green-scale.json with 50-950 scale
-
-# With defaults
-npm run scale:generate
-# Creates: scale.json
-```
-
-### Color Utilities
-
-```typescript
-import {
-  lighten,
-  darken,
-  adjustLightness,
-  adjustChroma,
-  adjustHue,
-  getComplementary,
-  getAnalogous,
-  getTriadic,
-  checkContrast,
-  oklchToHex,
-} from '@coston/design-tokens';
-
-// Adjust colors
-lighten('oklch(0.5 0.2 200)', 0.1); // Increase lightness by 0.1
-darken('oklch(0.5 0.2 200)', 0.1); // Decrease lightness by 0.1
-adjustChroma('oklch(0.5 0.2 200)', 0.05); // Increase saturation
-adjustHue('oklch(0.5 0.2 200)', 30); // Rotate hue by 30°
-
-// Color harmonies
-getComplementary('oklch(0.6 0.2 200)'); // Opposite hue (180° rotation)
-getAnalogous('oklch(0.6 0.2 200)'); // Adjacent hues (±30°)
-getTriadic('oklch(0.6 0.2 200)'); // Three evenly spaced hues (120° apart)
-
-// WCAG contrast validation
-const result = checkContrast('oklch(0.2 0.1 240)', 'oklch(0.95 0.02 240)');
-console.log(result.ratio); // 12.5
-console.log(result.AA); // true (passes WCAG AA: 4.5:1)
-console.log(result.AAA); // true (passes WCAG AAA: 7:1)
-
-// Convert to hex for CSS fallbacks
-oklchToHex('oklch(0.6 0.2 280)'); // "#7b4eff"
-```
+This generates a mathematically balanced theme with proper contrast ratios for both light and dark modes.
 
 ## Package Exports
 
-- `@coston/design-tokens` - Color utilities and theme generation functions
+- `@coston/design-tokens` - Theme generation utility (`generateThemeFromColor`)
 - `@coston/design-tokens/tokens.json` - Token data (core, semantic, themes)
 - `@coston/design-tokens/tokens.css` - Pure CSS variables
-- `@coston/design-tokens/tailwind.css` - With Tailwind utility classes
+- `@coston/design-tokens/tailwind.css` - Tailwind utility classes
 
 ## Demo
 

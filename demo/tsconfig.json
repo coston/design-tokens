@@ -17,7 +17,10 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@coston/design-tokens": ["../src/index.ts"],
+      "@internal/color-utils": ["../src/build/utils/color-utils.ts"],
+      "@internal/contrast": ["../src/build/utils/contrast-validation.ts"]
     }
   },
   "include": ["src", "vite.config.ts"]

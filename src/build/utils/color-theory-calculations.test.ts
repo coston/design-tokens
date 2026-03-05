@@ -29,7 +29,7 @@ import {
   calculateMinimumHueSeparation,
   validateColorTheoryCompliance,
   getRecommendedLightness,
-} from '../src/build/utils/color-theory-calculations.js';
+} from './color-theory-calculations.js';
 
 describe('Color Theory Calculations', () => {
   // ============================================================================

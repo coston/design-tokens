@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findBrackets } from '../src/build/utils/functional-utils.js';
+import { findBrackets } from './functional-utils.js';
 
 describe('Functional Utils', () => {
   describe('findBrackets', () => {

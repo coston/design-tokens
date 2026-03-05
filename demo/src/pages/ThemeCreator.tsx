@@ -8,12 +8,10 @@ import { ColorInput } from '@/components/theme-creator/ColorInput';
 import { ThemePreview } from '@/components/theme-creator/ThemePreview';
 import { ThemeExport } from '@/components/theme-creator/ThemeExport';
 import { RadiusInput } from '@/components/theme-creator/RadiusInput';
-import {
-  parseOKLCH,
-  toOKLCH,
-  generateThemeFromColor,
-  type GeneratedTheme,
-} from '@coston/design-tokens';
+// Public API
+import { generateThemeFromColor, type GeneratedTheme } from '@coston/design-tokens';
+// Demo-specific imports (not part of public API)
+import { parseOKLCH, toOKLCH } from '@internal/color-utils';
 
 interface ColorState {
   l: number;

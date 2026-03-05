@@ -502,10 +502,15 @@ console.log(tokens.themes.dark.background);
 // "oklch(0.137 0 0)"
 ```
 
-Import utilities from the main package:
+Import theme generation utility:
 
 ```typescript
-import { lighten, darken, generateThemeFromColor } from '@coston/design-tokens';
+import { generateThemeFromColor } from '@coston/design-tokens';
+
+// Generate a custom theme from your brand color
+const theme = generateThemeFromColor({
+  baseColor: 'oklch(0.6 0.15 240)',
+});
 ```
 
 ## Learn More
