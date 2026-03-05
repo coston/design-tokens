@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { tokens } from '@coston/design-tokens';
+import tokens from '@coston/design-tokens/tokens.json';
 
 interface LayoutProps {
   children: React.ReactNode;

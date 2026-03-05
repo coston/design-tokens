@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import { toOKLCH, oklchToHex } from '@coston/design-tokens/utils';
+import { toOKLCH, oklchToHex } from '@coston/design-tokens';
 
 interface ColorState {
   l: number;

@@ -490,10 +490,10 @@ The build output will be in the `dist/` directory.
 
 ## TypeScript Support
 
-The package includes TypeScript definitions. Import token metadata programmatically:
+The package includes TypeScript definitions. Import token data from JSON:
 
 ```typescript
-import tokens from '@coston/design-tokens';
+import tokens from '@coston/design-tokens/tokens.json';
 
 console.log(tokens.semantic.primary);
 // "oklch(0.530 0.186 255)"
@@ -502,12 +502,17 @@ console.log(tokens.themes.dark.background);
 // "oklch(0.137 0 0)"
 ```
 
+Import utilities from the main package:
+
+```typescript
+import { lighten, darken, generateThemeFromColor } from '@coston/design-tokens';
+```
+
 ## Learn More
 
 - [Main Documentation](../README.md) - Complete guide to using the design tokens
-- [Color Theory](../COLOR-THEORY.md) - Understanding the color system
-- [Utilities Guide](../UTILITIES.md) - Color utilities and theme generation
-- [Versioning Policy](../VERSIONING.md) - Semantic versioning details
+- [Color Theory](../resources/color-theory.md) - Understanding OKLCH and the color system
+- [CHANGELOG](../CHANGELOG.md) - Version history and updates
 
 ### Optional Integration Docs
 

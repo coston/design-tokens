@@ -5,17 +5,11 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    "./tokens.css": "./dist/tokens.css",
-    "./tailwind.css": "./dist/tailwind.css",
-    "./tokens.json": "./dist/tokens.json",
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./utils": {
-      "types": "./dist/utils.d.ts",
-      "default": "./dist/utils.js"
-    }
+    "./*": "./dist/*"
   },
   "files": [
     "dist"
@@ -24,7 +18,7 @@
     "*.css"
   ],
   "scripts": {
-    "build": "tsx src/build/index.ts",
+    "build": "tsc && tsx src/build/index.ts",
     "build:all": "npm run build && npm run demo:build",
     "test": "vitest run",
     "test:watch": "vitest",

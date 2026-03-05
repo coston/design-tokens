@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react';
-import { oklchToHex, type ValidationIssue } from '@coston/design-tokens/utils';
+import { oklchToHex, type ValidationIssue } from '@coston/design-tokens';
 
 interface ContrastReportProps {
   lightIssues: ValidationIssue[];

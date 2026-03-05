@@ -172,18 +172,31 @@ describe('Token Contract', () => {
   });
 
   describe('JavaScript exports', () => {
-    it('should generate index.js', () => {
+    it('should generate index.js with utility exports', () => {
       const indexJS = readFileSync(join(__dirname, '../dist/index.js'), 'utf-8');
 
-      expect(indexJS).toContain('export const tokens');
-      expect(indexJS).toContain('export default tokens');
+      // Index should export utilities, not tokens
+      expect(indexJS).toContain('Utility Library');
+      expect(indexJS).toContain('parseOKLCH');
+      expect(indexJS).toContain('generateThemeFromColor');
+      expect(indexJS).toContain('checkContrast');
     });
 
-    it('should generate index.d.ts', () => {
+    it('should generate index.d.ts with type exports', () => {
       const indexDTS = readFileSync(join(__dirname, '../dist/index.d.ts'), 'utf-8');
 
-      expect(indexDTS).toContain('export interface');
-      expect(indexDTS).toContain('export declare const tokens');
+      // Should export utility function types
+      expect(indexDTS).toContain('export');
+      expect(indexDTS).toContain('parseOKLCH');
+    });
+
+    it('should generate tokens.json with token data', () => {
+      const tokensJSON = readFileSync(join(__dirname, '../dist/tokens.json'), 'utf-8');
+      const tokens = JSON.parse(tokensJSON);
+
+      expect(tokens).toHaveProperty('core');
+      expect(tokens).toHaveProperty('semantic');
+      expect(tokens).toHaveProperty('themes');
     });
   });
 });

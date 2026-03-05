@@ -13,7 +13,7 @@ import {
   toOKLCH,
   generateThemeFromColor,
   type GeneratedTheme,
-} from '@coston/design-tokens/utils';
+} from '@coston/design-tokens';
 
 interface ColorState {
   l: number;

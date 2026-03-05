@@ -116,13 +116,19 @@ document.documentElement.classList.add('dark');
 
 ## JavaScript/TypeScript Access
 
-Access token values programmatically:
+Access token values from the JSON file:
 
 ```typescript
-import tokens from '@coston/design-tokens';
+import tokens from '@coston/design-tokens/tokens.json';
 
 console.log(tokens.semantic.primary); // "oklch(0.530 0.186 255)"
 console.log(tokens.themes.dark.background); // "oklch(0.137 0 0)"
+```
+
+Import utilities from the main package:
+
+```typescript
+import { lighten, darken, generateThemeFromColor } from '@coston/design-tokens';
 ```
 
 ## Advanced Features
@@ -132,7 +138,7 @@ console.log(tokens.themes.dark.background); // "oklch(0.137 0 0)"
 Generate complete themes from a single brand color using mathematical color theory:
 
 ```typescript
-import { generateThemeFromColor } from '@coston/design-tokens/utils';
+import { generateThemeFromColor } from '@coston/design-tokens';
 
 const theme = generateThemeFromColor({
   baseColor: 'oklch(0.6 0.08 300)', // Your brand color (required)
@@ -161,7 +167,7 @@ npm run theme:generate
 Create perceptually uniform color scales (50-950):
 
 ```typescript
-import { generateColorScale } from '@coston/design-tokens/utils';
+import { generateColorScale } from '@coston/design-tokens';
 
 const scale = generateColorScale('oklch(0.6 0.2 280)');
 // Returns: { 50: 'oklch(...)', 100: 'oklch(...)', ..., 950: 'oklch(...)' }
@@ -196,7 +202,7 @@ import {
   getTriadic,
   checkContrast,
   oklchToHex,
-} from '@coston/design-tokens/utils';
+} from '@coston/design-tokens';
 
 // Adjust colors
 lighten('oklch(0.5 0.2 200)', 0.1); // Increase lightness by 0.1
@@ -221,11 +227,10 @@ oklchToHex('oklch(0.6 0.2 280)'); // "#7b4eff"
 
 ## Package Exports
 
+- `@coston/design-tokens` - Color utilities and theme generation functions
+- `@coston/design-tokens/tokens.json` - Token data (core, semantic, themes)
 - `@coston/design-tokens/tokens.css` - Pure CSS variables
 - `@coston/design-tokens/tailwind.css` - With Tailwind utility classes
-- `@coston/design-tokens/tokens.json` - Token metadata as JSON
-- `@coston/design-tokens` - JavaScript/TypeScript module
-- `@coston/design-tokens/utils` - Color utilities and theme generation
 
 ## Demo
 

@@ -17,7 +17,7 @@ export default defineConfig({
         '**/examples/**',
         '**/generators/**', // Tested via integration/contract tests
         'src/build/index.ts', // Build orchestrator - tested via integration
-        'src/build/utils-export.ts', // Just exports, no logic to test
+        'src/index.ts', // Just exports, no logic to test
       ],
       thresholds: {
         statements: 95,
