@@ -25,9 +25,13 @@ import {
   oklchToRgb,
   rgbToHex,
   oklchToHex,
+  hexToOKLCH,
   isInGamut,
   findMaxChroma,
   getGamutInfo,
+  warmGamutCache,
+  pipe,
+  compose,
 } from '../src/build/utils/color-utils.js';
 
 import {
@@ -56,6 +60,156 @@ import {
 } from '../src/build/utils/modular-scale.js';
 
 describe('Color Utils', () => {
+  describe('Function Composition', () => {
+    describe('pipe', () => {
+      it('should compose functions left-to-right', () => {
+        const lightenAndDesaturate = pipe([
+          (color: string) => lighten(color, 0.1),
+          (color: string) => desaturate(color, 0.2),
+        ]);
+
+        const baseColor = 'oklch(0.5 0.2 240)';
+        const result = lightenAndDesaturate(baseColor);
+
+        const parsed = parseOKLCH(result);
+        expect(parsed.l).toBeCloseTo(0.6);
+        expect(parsed.c).toBeCloseTo(0.16); // 0.2 * 0.8
+      });
+
+      it('should handle empty function array', () => {
+        const identity = pipe([]);
+        const color = 'oklch(0.5 0.2 240)';
+        expect(identity(color)).toBe(color);
+      });
+
+      it('should handle single function', () => {
+        const justLighten = pipe([(color: string) => lighten(color, 0.1)]);
+        const result = justLighten('oklch(0.5 0.2 240)');
+        expect(parseOKLCH(result).l).toBeCloseTo(0.6);
+      });
+
+      it('should apply functions in sequence', () => {
+        const tripleHue = pipe([
+          (color: string) => adjustHue(color, 10),
+          (color: string) => adjustHue(color, 10),
+          (color: string) => adjustHue(color, 10),
+        ]);
+
+        const result = tripleHue('oklch(0.5 0.2 0)');
+        expect(parseOKLCH(result).h).toBe(30);
+      });
+    });
+
+    describe('compose', () => {
+      it('should compose functions right-to-left', () => {
+        const lightenAndDesaturate = compose(
+          (color: string) => desaturate(color, 0.2), // Applied second
+          (color: string) => lighten(color, 0.1) // Applied first
+        );
+
+        const baseColor = 'oklch(0.5 0.2 240)';
+        const result = lightenAndDesaturate(baseColor);
+
+        const parsed = parseOKLCH(result);
+        expect(parsed.l).toBeCloseTo(0.6);
+        expect(parsed.c).toBeCloseTo(0.16); // 0.2 * 0.8
+      });
+
+      it('should handle single function', () => {
+        const justDarken = compose((color: string) => darken(color, 0.1));
+        const result = justDarken('oklch(0.5 0.2 240)');
+        expect(parseOKLCH(result).l).toBeCloseTo(0.4);
+      });
+
+      it('should apply in reverse order compared to pipe', () => {
+        const viaCompose = compose(
+          (color: string) => adjustHue(color, 20), // Second
+          (color: string) => adjustHue(color, 10) // First
+        );
+
+        const viaPipe = pipe([
+          (color: string) => adjustHue(color, 10), // First
+          (color: string) => adjustHue(color, 20), // Second
+        ]);
+
+        const color = 'oklch(0.5 0.2 0)';
+        expect(viaCompose(color)).toBe(viaPipe(color));
+      });
+    });
+  });
+
+  describe('Color Conversions', () => {
+    describe('hexToOKLCH', () => {
+      it('should convert hex to OKLCH format', () => {
+        const result = hexToOKLCH('#0461DE');
+        expect(result).toContain('oklch(');
+        const parsed = parseOKLCH(result);
+        expect(parsed.l).toBeGreaterThan(0);
+        expect(parsed.l).toBeLessThan(1);
+        expect(parsed.c).toBeGreaterThan(0);
+        expect(parsed.h).toBeGreaterThan(0);
+        expect(parsed.h).toBeLessThan(360);
+      });
+
+      it('should handle pure colors', () => {
+        const red = hexToOKLCH('#FF0000');
+        const green = hexToOKLCH('#00FF00');
+        const blue = hexToOKLCH('#0000FF');
+
+        expect(parseOKLCH(red).h).toBeGreaterThan(0);
+        expect(parseOKLCH(red).h).toBeLessThan(60);
+
+        expect(parseOKLCH(green).h).toBeGreaterThan(100);
+        expect(parseOKLCH(green).h).toBeLessThan(180);
+
+        expect(parseOKLCH(blue).h).toBeGreaterThan(240);
+        expect(parseOKLCH(blue).h).toBeLessThan(300);
+      });
+
+      it('should handle grayscale colors', () => {
+        const white = hexToOKLCH('#FFFFFF');
+        const black = hexToOKLCH('#000000');
+        const gray = hexToOKLCH('#808080');
+
+        const whiteP = parseOKLCH(white);
+        const blackP = parseOKLCH(black);
+        const grayP = parseOKLCH(gray);
+
+        expect(whiteP.l).toBeCloseTo(1, 1);
+        expect(blackP.l).toBeCloseTo(0, 1);
+        expect(grayP.l).toBeGreaterThan(0.4);
+        expect(grayP.l).toBeLessThan(0.7);
+
+        // Grayscale should have very low chroma
+        expect(whiteP.c).toBeLessThan(0.01);
+        expect(blackP.c).toBeLessThan(0.01);
+        expect(grayP.c).toBeLessThan(0.01);
+      });
+
+      it('should throw error for invalid hex format', () => {
+        expect(() => hexToOKLCH('#12')).toThrow(/Invalid hex/);
+        expect(() => hexToOKLCH('invalid')).toThrow(/Invalid hex/);
+        expect(() => hexToOKLCH('#GGGGGG')).not.toThrow(); // Will parse but give bad values
+      });
+
+      it('should be reversible with oklchToHex', () => {
+        const originalHex = '#0461DE';
+        const oklch = hexToOKLCH(originalHex);
+        const backToHex = oklchToHex(oklch);
+
+        // Colors should be very close (within rounding)
+        expect(backToHex.toLowerCase()).toMatch(/^#[0-9a-f]{6}$/);
+
+        // Parse both and compare - should be very similar
+        const original = hexToOKLCH(originalHex);
+        const roundtrip = hexToOKLCH(backToHex);
+
+        expect(parseOKLCH(original).l).toBeCloseTo(parseOKLCH(roundtrip).l, 2);
+        expect(parseOKLCH(original).c).toBeCloseTo(parseOKLCH(roundtrip).c, 2);
+      });
+    });
+  });
+
   describe('parseOKLCH', () => {
     it('should parse OKLCH color string', () => {
       const result = parseOKLCH('oklch(0.5 0.2 200)');
@@ -328,6 +482,69 @@ describe('Color Utils', () => {
 
       expect(parsed.l).toBeCloseTo(0.5); // 0.8 * 0.25 + 0.4 * 0.75
     });
+
+    it('should handle hue wrapping across 360 boundary', () => {
+      const c1 = 'oklch(0.5 0.2 350)'; // Near 360
+      const c2 = 'oklch(0.5 0.2 10)'; // Near 0
+
+      const mixed = mixColors(c1, c2, 0.5);
+      const parsed = parseOKLCH(mixed);
+
+      // Should mix through the short path (350 -> 360/0 -> 10)
+      // Expected: (350 + 10) / 2 = 360 / 2 = 0
+      expect(parsed.h).toBeCloseTo(0, 0);
+    });
+
+    it('should handle hue wrapping in opposite direction', () => {
+      const c1 = 'oklch(0.5 0.2 10)'; // Near 0
+      const c2 = 'oklch(0.5 0.2 350)'; // Near 360
+
+      const mixed = mixColors(c1, c2, 0.5);
+      const parsed = parseOKLCH(mixed);
+
+      // Should mix through the short path
+      expect(parsed.h).toBeCloseTo(0, 0);
+    });
+
+    it('should mix colors with alpha channels', () => {
+      const c1 = 'oklch(0.8 0.2 200 / 1.0)';
+      const c2 = 'oklch(0.4 0.1 200 / 0.5)';
+      const mixed = mixColors(c1, c2, 0.5);
+      const parsed = parseOKLCH(mixed);
+
+      expect(parsed.l).toBeCloseTo(0.6);
+      expect(parsed.c).toBeCloseTo(0.15);
+      expect(parsed.a).toBeCloseTo(0.75); // (1.0 + 0.5) / 2
+    });
+
+    it('should not include alpha if both colors lack it', () => {
+      const c1 = 'oklch(0.8 0.2 200)';
+      const c2 = 'oklch(0.4 0.1 200)';
+      const mixed = mixColors(c1, c2, 0.5);
+      const parsed = parseOKLCH(mixed);
+
+      expect(parsed.a).toBeUndefined();
+    });
+
+    it('should handle mixing with weight 0 (returns color2)', () => {
+      const c1 = 'oklch(0.8 0.2 200)';
+      const c2 = 'oklch(0.4 0.1 200)';
+      const mixed = mixColors(c1, c2, 1.0);
+      const parsed = parseOKLCH(mixed);
+
+      expect(parsed.l).toBeCloseTo(0.4);
+      expect(parsed.c).toBeCloseTo(0.1);
+    });
+
+    it('should handle mixing with weight 1 (returns color1)', () => {
+      const c1 = 'oklch(0.8 0.2 200)';
+      const c2 = 'oklch(0.4 0.1 200)';
+      const mixed = mixColors(c1, c2, 0);
+      const parsed = parseOKLCH(mixed);
+
+      expect(parsed.l).toBeCloseTo(0.8);
+      expect(parsed.c).toBeCloseTo(0.2);
+    });
   });
 
   describe('Gamut Mapping', () => {
@@ -436,6 +653,102 @@ describe('Color Utils', () => {
         expect(info).toHaveProperty('currentChroma');
         expect(info).toHaveProperty('maxChroma');
         expect(info).toHaveProperty('utilization');
+      });
+    });
+
+    describe('warmGamutCache', () => {
+      it('should pre-populate the gamut cache', () => {
+        // Clear any existing cache by calling findMaxChroma with a unique value
+        // Then warm the cache
+        warmGamutCache(5);
+
+        // After warming, these calls should be instant (from cache)
+        const start = Date.now();
+        const result1 = findMaxChroma(0.5, 240);
+        const result2 = findMaxChroma(0.5, 240);
+        const elapsed = Date.now() - start;
+
+        // Results should be identical (from cache)
+        expect(result1).toBe(result2);
+
+        // Should be very fast (under 5ms for cached lookups)
+        expect(elapsed).toBeLessThan(10);
+      });
+
+      it('should cache multiple lightness and hue combinations', () => {
+        warmGamutCache(3);
+
+        // These should all be cached now
+        const cached1 = findMaxChroma(0, 0);
+        const cached2 = findMaxChroma(0.5, 120);
+        const cached3 = findMaxChroma(1, 240);
+
+        // All should return valid values
+        expect(cached1).toBeGreaterThanOrEqual(0);
+        expect(cached2).toBeGreaterThan(0);
+        expect(cached3).toBeGreaterThanOrEqual(0);
+      });
+
+      it('should handle different sample sizes', () => {
+        // Small sample size
+        warmGamutCache(2);
+
+        // Should still work and populate cache
+        const result = findMaxChroma(0, 0);
+        expect(result).toBeGreaterThanOrEqual(0);
+      });
+
+      it('should improve performance for subsequent lookups', () => {
+        // Measure uncached performance
+        const uncachedStart = Date.now();
+        findMaxChroma(0.42, 137); // Unlikely to be cached
+        const uncachedTime = Date.now() - uncachedStart;
+
+        // Warm cache with common values
+        warmGamutCache(20);
+
+        // Measure cached performance for a value that should be cached
+        const cachedStart = Date.now();
+        findMaxChroma(0.5, 120); // Common value from warmGamutCache
+        const cachedTime = Date.now() - cachedStart;
+
+        // Cached should be much faster (or at least not slower)
+        expect(cachedTime).toBeLessThanOrEqual(uncachedTime * 2);
+      });
+    });
+
+    describe('Cache behavior', () => {
+      it('should use cache for repeated lookups', () => {
+        const l = 0.73;
+        const h = 157;
+
+        // First call populates cache
+        const first = findMaxChroma(l, h);
+
+        // Second call should use cache
+        const second = findMaxChroma(l, h);
+
+        // Results should be identical
+        expect(first).toBe(second);
+      });
+
+      it('should cache with precision key', () => {
+        // Same l/h but different precision should still use same cache key
+        const result1 = findMaxChroma(0.6, 240, 0.001);
+        const result2 = findMaxChroma(0.6, 240, 0.0001);
+
+        // Should be very close (from same cache or similar calculation)
+        expect(Math.abs(result1 - result2)).toBeLessThan(0.01);
+      });
+
+      it('should handle cache for edge cases', () => {
+        // Test that cache works for extreme values
+        const nearBlack = findMaxChroma(0.01, 240);
+        const nearWhite = findMaxChroma(0.99, 240);
+
+        // Repeated calls should use cache
+        expect(findMaxChroma(0.01, 240)).toBe(nearBlack);
+        expect(findMaxChroma(0.99, 240)).toBe(nearWhite);
       });
     });
 

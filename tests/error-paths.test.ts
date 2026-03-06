@@ -215,6 +215,90 @@ describe('Error Path Testing', () => {
     });
   });
 
+  describe('Token Merging Edge Cases', () => {
+    it('should handle null override values gracefully', () => {
+      const base = { primary: 'oklch(0.5 0.2 200)' };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const overrides = { primary: null as any };
+
+      const result = mergeTokens(base, overrides);
+      // serializeValue should return null for null values (line 94)
+      expect(result.primary).toBe(base.primary); // Keeps original
+    });
+
+    it('should handle undefined override values', () => {
+      const base = { primary: 'oklch(0.5 0.2 200)' };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const overrides = { primary: undefined as any };
+
+      const result = mergeTokens(base, overrides);
+      expect(result.primary).toBe(base.primary);
+    });
+
+    it('should handle object overrides without $ref', () => {
+      const base = { primary: 'oklch(0.5 0.2 200)' };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const overrides = { primary: { value: 'test', notRef: true } as any };
+
+      const result = mergeTokens(base, overrides);
+      // serializeValue returns null for objects without $ref (line 94-95)
+      expect(result.primary).toBe(base.primary);
+    });
+
+    it('should filter out numeric values in flattening', () => {
+      const tokens = {
+        spacing: {
+          small: 8,
+          medium: 16,
+          large: '2rem', // Valid string token
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
+
+      const result = flattenTokens(tokens);
+      // Non-string primitives are filtered out by line 30-31 return
+      expect(result).not.toHaveProperty('spacing.small');
+      expect(result).not.toHaveProperty('spacing.medium');
+      // But string values should be kept
+      expect(result).toHaveProperty('spacing.large');
+      expect(result['spacing.large']).toBe('2rem');
+    });
+
+    it('should filter out boolean values in tokens', () => {
+      const tokens = {
+        features: {
+          enabled: true,
+          disabled: false,
+          theme: 'dark', // Valid string token
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
+
+      const result = flattenTokens(tokens);
+      // Non-string primitives should be filtered out (line 30-31)
+      expect(result).not.toHaveProperty('features.enabled');
+      expect(result).not.toHaveProperty('features.disabled');
+      // But string values should be kept
+      expect(result).toHaveProperty('features.theme');
+    });
+
+    it('should filter out array values in tokens', () => {
+      const tokens = {
+        values: {
+          list: [1, 2, 3],
+          name: 'test', // Valid string token
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
+
+      const result = flattenTokens(tokens);
+      // Arrays should be filtered out (line 30-31 return)
+      expect(result).not.toHaveProperty('values.list');
+      // But string values should be kept
+      expect(result).toHaveProperty('values.name');
+    });
+  });
+
   describe('Token Flattening', () => {
     it('should handle deeply nested structures', () => {
       const tokens = {

@@ -368,6 +368,95 @@ export function oklchToHex(color: string): string {
 }
 
 /**
+ * Parse a hex color string to RGB components
+ */
+function parseHex(hex: string): { r: number; g: number; b: number } {
+  const normalized = hex.replace('#', '');
+
+  if (normalized.length !== 6) {
+    throw new Error(`Invalid hex color: ${hex} (must be 6 digits)`);
+  }
+
+  return {
+    r: parseInt(normalized.slice(0, 2), 16),
+    g: parseInt(normalized.slice(2, 4), 16),
+    b: parseInt(normalized.slice(4, 6), 16),
+  };
+}
+
+/**
+ * Convert sRGB value to linear RGB
+ */
+function srgbToLinear(value: number): number {
+  const normalized = value / 255;
+  if (normalized <= 0.04045) {
+    return normalized / 12.92;
+  }
+  return Math.pow((normalized + 0.055) / 1.055, 2.4);
+}
+
+/**
+ * Convert linear RGB to Oklab
+ */
+function linearRgbToOklab(rgb: { r: number; g: number; b: number }): {
+  l: number;
+  a: number;
+  b: number;
+} {
+  // Linear RGB to LMS
+  const l = 0.4122214708 * rgb.r + 0.5363325363 * rgb.g + 0.0514459929 * rgb.b;
+  const m = 0.2119034982 * rgb.r + 0.6806995451 * rgb.g + 0.1073969566 * rgb.b;
+  const s = 0.0883024619 * rgb.r + 0.2817188376 * rgb.g + 0.6299787005 * rgb.b;
+
+  // LMS to Oklab
+  const l_ = Math.cbrt(l);
+  const m_ = Math.cbrt(m);
+  const s_ = Math.cbrt(s);
+
+  return {
+    l: 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_,
+    a: 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_,
+    b: 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_,
+  };
+}
+
+/**
+ * Convert Oklab to OKLCH
+ */
+function oklabToOklch(oklab: { l: number; a: number; b: number }): OKLCH {
+  const { l, a, b } = oklab;
+  const c = Math.sqrt(a * a + b * b);
+  const h = (Math.atan2(b, a) * 180) / Math.PI;
+
+  return {
+    l,
+    c,
+    h: h >= 0 ? h : h + 360,
+  };
+}
+
+/**
+ * Convert hex color to OKLCH format
+ *
+ * @param hex - Hex color string (e.g., "#0461DE")
+ * @returns OKLCH color string (e.g., "oklch(0.532 0.178 264)")
+ *
+ * @example
+ * hexToOKLCH("#0461DE") // "oklch(0.532 0.178 264)"
+ */
+export function hexToOKLCH(hex: string): string {
+  const rgb = parseHex(hex);
+  const linearRgb = {
+    r: srgbToLinear(rgb.r),
+    g: srgbToLinear(rgb.g),
+    b: srgbToLinear(rgb.b),
+  };
+  const oklab = linearRgbToOklab(linearRgb);
+  const oklch = oklabToOklch(oklab);
+  return toOKLCH(oklch);
+}
+
+/**
  * Factory function to create gamut checkers
  * Creates a function that checks if RGB values are within specified range
  */

@@ -392,12 +392,16 @@ describe('Color Theory Calculations', () => {
       expect(getRecommendedLightness('background', 'light')).toBe(0.98);
       expect(getRecommendedLightness('foreground', 'light')).toBe(0.36);
       expect(getRecommendedLightness('primary', 'light')).toBe(0.6);
+      expect(getRecommendedLightness('muted', 'light')).toBe(0.89);
+      expect(getRecommendedLightness('muted-foreground', 'light')).toBe(0.45);
     });
 
     it('should return recommended lightness for dark theme', () => {
       expect(getRecommendedLightness('background', 'dark')).toBe(0.15);
       expect(getRecommendedLightness('foreground', 'dark')).toBe(0.9);
       expect(getRecommendedLightness('primary', 'dark')).toBe(0.82);
+      expect(getRecommendedLightness('muted', 'dark')).toBe(0.18);
+      expect(getRecommendedLightness('muted-foreground', 'dark')).toBe(0.7);
     });
 
     it('should handle edge cases in chroma multiplier calculation', () => {
