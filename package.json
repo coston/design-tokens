@@ -1,6 +1,6 @@
 {
   "name": "@coston/design-tokens",
-  "version": "0.1.2",
+  "version": "0.2.1",
   "description": "Centralized design tokens for modern web applications",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -34,6 +34,10 @@
     "demo:dev": "npm run dev --prefix demo",
     "demo:build": "npm run build --prefix demo",
     "demo:preview": "npm run preview --prefix demo",
+    "demo-vanilla:install": "npm install --prefix demo-vanilla",
+    "demo-vanilla:dev": "npm run dev --prefix demo-vanilla",
+    "demo-vanilla:build": "npm run build --prefix demo-vanilla",
+    "demo-vanilla:preview": "npm run preview --prefix demo-vanilla",
     "prepare": "husky",
     "prepublishOnly": "npm run build && npm test"
   },

@@ -27,12 +27,7 @@ export {
 } from './build/utils/theme-generator.js';
 
 // W3C Design Tokens Format support
-export {
-  parseW3CTokens,
-  flattenW3CTokens,
-  resolveW3CReferences,
-  loadW3CTokens,
-} from './build/utils/w3c-parser.js';
+export { flattenW3CTokens, resolveW3CReferences } from './build/utils/w3c-parser.js';
 
 // Color utilities for custom build systems
 export { hexToOKLCH, oklchToHex, warmGamutCache } from './build/utils/color-utils.js';

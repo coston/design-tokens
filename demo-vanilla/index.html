@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@coston/design-tokens — Vanilla Demo</title>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>@coston/design-tokens</h1>
+        <p>Vanilla demo — no framework, imports from npm registry</p>
+        <div class="badges">
+          <span class="badge">CSS Variables</span>
+          <span class="badge accent">JS API</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Install</h2>
+        <pre><code>npm install @coston/design-tokens</code></pre>
+
+        <h2>CSS Import (no /dist/ needed)</h2>
+        <pre><code>/* style.css */
+@import "@coston/design-tokens/tokens.css";</code></pre>
+
+        <h2>JS Import</h2>
+        <pre><code>import { generateThemeFromColor } from "@coston/design-tokens";</code></pre>
+      </section>
+
+      <section>
+        <h2>Color Tokens</h2>
+        <div class="swatches" id="swatches"></div>
+      </section>
+
+      <section>
+        <h2>Generated Theme</h2>
+        <p class="muted" id="theme-status">Generating theme from base color…</p>
+        <div id="theme-output"></div>
+      </section>
+
+      <section>
+        <h2>Components</h2>
+        <div class="component-row">
+          <button class="btn btn-primary">Primary</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-destructive">Destructive</button>
+          <button class="btn btn-outline">Outline</button>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <strong>Default Card</strong>
+            <p>Uses <code>--card</code> and <code>--card-foreground</code></p>
+          </div>
+          <div class="card muted-card">
+            <strong>Muted Card</strong>
+            <p>Uses <code>--muted</code> and <code>--muted-foreground</code></p>
+          </div>
+          <div class="card accent-card">
+            <strong>Accent Card</strong>
+            <p>Uses <code>--accent</code> and <code>--accent-foreground</code></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
