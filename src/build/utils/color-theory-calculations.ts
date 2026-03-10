@@ -246,7 +246,7 @@ const CHROMA_CURVE_POINTS: Array<{ l: number; mult: number }> = [
   { l: 0.5, mult: 1.05 }, // Mid-tones start: peak at 1.05 (flat region begins)
   { l: 0.65, mult: 1.05 }, // Mid-tones peak: flat at 1.05 (flat region ends)
   { l: 0.9, mult: 0.7 }, // Light: 0.7 + (0.9-0.9)*1.4 = 0.7
-  { l: 0.900001, mult: 0.35 }, // Discontinuity: 0.2 + (1-0.9)*1.5 ≈ 0.35
+  { l: 0.900001, mult: 0.4 }, // Discontinuity: smoothed transition from 0.7 to 0.2
   { l: 1.0, mult: 0.2 }, // Very light: 0.2 + (1-1)*1.5 = 0.2
 ];
 

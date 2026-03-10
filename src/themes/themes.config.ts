@@ -19,7 +19,7 @@ export const themes: ThemeConfig[] = [
     // 240° Blue - Primary semantic hue (COLOR-THEORY.md line 67)
     // Convention: Associated with stability and trust in digital interfaces
     // Chroma 0.134: Near maximum for blue at L=0.6 in sRGB (~0.14-0.16)
-    baseColor: 'oklch(0.6 0.134 240)',
+    baseColor: 'oklch(0.6 0.175 240)',
   },
   {
     name: 'forest',
@@ -27,7 +27,7 @@ export const themes: ThemeConfig[] = [
     // Convention: Widely associated with "safe" or "go" in UI systems
     // Chroma 0.150: Near maximum for green at L=0.6 in sRGB (~0.18-0.20)
     // Note: Slightly lower than theoretical max to ensure consistent appearance
-    baseColor: 'oklch(0.6 0.150 150)',
+    baseColor: 'oklch(0.6 0.165 150)',
   },
   {
     name: 'purple',
@@ -35,6 +35,6 @@ export const themes: ThemeConfig[] = [
     // Convention: Creative differentiation, often used for accent/brand colors
     // Analogous harmony with primary blue (~60° separation)
     // Chroma 0.15: Near maximum for magenta at L=0.6 in sRGB (~0.22-0.24)
-    baseColor: 'oklch(0.6 0.15 300)',
+    baseColor: 'oklch(0.6 0.185 300)',
   },
 ];

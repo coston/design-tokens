@@ -52,7 +52,7 @@ export function HomePage() {
       </div>
 
       {/* Quick Start */}
-      <Card className="bg-muted/50">
+      <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5" />
@@ -77,7 +77,7 @@ export function HomePage() {
             </pre>
             <p className="text-xs text-muted-foreground mt-2">
               Or import in JS:{' '}
-              <code className="bg-muted px-1 py-0.5 rounded">
+              <code className="bg-background border border-border px-1 py-0.5 rounded">
                 import '@coston/design-tokens/tokens.css'
               </code>
             </p>
@@ -103,8 +103,10 @@ export function HomePage() {
           <div className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground mb-3">
               <strong>Optional:</strong> Using Tailwind? Import{' '}
-              <code className="text-xs bg-muted px-1 py-0.5 rounded">tailwind.css</code> instead for
-              utility classes.
+              <code className="text-xs bg-background border border-border px-1 py-0.5 rounded">
+                tailwind.css
+              </code>{' '}
+              instead for utility classes.
             </p>
             <pre className="bg-background border border-border rounded-md p-3 text-sm overflow-x-auto">
               <code>{`/* styles.css */

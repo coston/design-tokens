@@ -206,7 +206,7 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
   const MODE_CONFIGS: Record<'light' | 'dark', ModeConfig> = {
     light: {
       fg: 0.36,
-      bg: 0.98,
+      bg: 0.97,
       fgChroma: baseChroma * 0.3,
       bgChroma: baseChroma * 0.05,
       primaryL: lightPrimaryL,
@@ -241,25 +241,25 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
       createEntry('background', cfg.bg, cfg.bgChroma, modeHue(mode, -0.1, -0.2)),
       createEntry(
         'card',
-        modeValue(mode, 1.0, 0.15),
+        modeValue(mode, 1.0, 0.18),
         modeValue(mode, 0, baseChroma * 0.2),
         modeValue(mode, 0, -hueRange * 0.2)
       ),
       createEntry(
         'popover',
-        modeValue(mode, 1.0, 0.15),
+        modeValue(mode, 1.0, 0.18),
         modeValue(mode, 0, baseChroma * 0.2),
         modeValue(mode, 0, -hueRange * 0.2)
       ),
       createEntry(
         'secondary',
-        modeValue(mode, 0.92, 0.25),
+        modeValue(mode, 0.86, 0.27),
         modeChroma(mode, 0.3, 0.4),
         modeHue(mode, 0.2, 0.3)
       ),
       createEntry(
         'muted',
-        modeValue(mode, 0.94, 0.18),
+        modeValue(mode, 0.91, 0.22),
         modeChroma(mode, 0.15, 0.25),
         modeHue(mode, 0.1, 0.15)
       ),
@@ -286,7 +286,7 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
       ),
 
       // Accent
-      createEntry('accent', modeValue(mode, 0.75, 0.4), modeChroma(mode, 0.8, 0.6), hueRange * 2.5),
+      createEntry('accent', modeValue(mode, 0.8, 0.4), modeChroma(mode, 0.8, 0.6), hueRange * 2.5),
       createEntry(
         'accent-foreground',
         modeValue(mode, 0.18, 0.95),
@@ -311,13 +311,13 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
       // UI elements
       createEntry(
         'border',
-        modeValue(mode, 0.88, 0.25),
+        modeValue(mode, 0.79, 0.3),
         modeChroma(mode, 0.2, 0.35),
         modeHue(mode, 0.15, -0.25)
       ),
       createEntry(
         'input',
-        modeValue(mode, 0.95, 0.2),
+        modeValue(mode, 0.91, 0.24),
         modeChroma(mode, 0.1, 0.3),
         modeHue(mode, 0.1, -0.2)
       ),
@@ -333,7 +333,7 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
       // Sidebar
       createEntry(
         'sidebar-background',
-        modeValue(mode, 0.96, 0.1),
+        modeValue(mode, 0.93, 0.1),
         modeChroma(mode, 0.08, 0.12),
         modeHue(mode, 0.1, -0.25)
       ),
@@ -347,7 +347,7 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
       ),
       createEntry(
         'sidebar-accent',
-        modeValue(mode, 0.75, 0.4),
+        modeValue(mode, 0.8, 0.4),
         modeChroma(mode, 0.8, 0.6),
         hueRange * 2.5
       ),
@@ -359,7 +359,7 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
       ),
       createEntry(
         'sidebar-border',
-        modeValue(mode, 0.9, 0.22),
+        modeValue(mode, 0.82, 0.27),
         modeChroma(mode, 0.15, 0.3),
         modeHue(mode, 0.2, -0.3)
       ),
