@@ -11,6 +11,21 @@
 export interface ThemeConfig {
   name: string;
   baseColor: string;
+  /**
+   * Generation variant (default: 'default')
+   *
+   * - 'default'       — analogous hue palette (current algorithm)
+   * - 'monochromatic' — tinted-neutral palette: all tokens share the base
+   *                     hue at very low chroma, scaled from baseColor.c.
+   *                     baseColor with C=0 → pure grays (shadcn neutral).
+   *                     baseColor with C>0 → e.g. purple-tinted neutrals.
+   */
+  variant?: 'default' | 'monochromatic';
+  /** Explicit token values - bypasses algorithmic generation when provided */
+  tokens?: {
+    light: Record<string, string>;
+    dark: Record<string, string>;
+  };
 }
 
 export const themes: ThemeConfig[] = [
@@ -41,6 +56,7 @@ export const themes: ThemeConfig[] = [
     name: 'monochrome',
     // 0 chroma - fully achromatic (no hue), pure grayscale
     // Convention: Neutral, minimal aesthetic with no color bias
-    baseColor: 'oklch(0.6 0 0)',
+    baseColor: 'oklch(0 0 0)',
+    variant: 'monochromatic',
   },
 ];

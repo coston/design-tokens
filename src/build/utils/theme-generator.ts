@@ -430,6 +430,144 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
   return Object.freeze({ light: enforcedLight, dark: enforcedDark });
 }
 
+/**
+ * Generate a monochromatic tinted-neutral theme from a base color.
+ *
+ * Uses the same lightness hierarchy as the shadcn neutral theme but tints
+ * every token with the base hue at a chroma that scales with the input color:
+ *   - baseColor with C=0 → pure grayscale (identical to shadcn neutral)
+ *   - baseColor with C>0 → tinted neutrals (e.g. purple-tinted grays)
+ *
+ * Chart colors always use vibrant hues (main hue + offsets) so data
+ * visualizations remain legible regardless of the tint level.
+ *
+ * Lightness structure reference: shadcn/ui neutral theme (shadcn.com/themes)
+ */
+export function generateMonochromaticTheme(options: ThemeGeneratorOptions): GeneratedTheme {
+  const { baseColor, chromaScale = 1.0 } = options;
+  const base = parseOKLCH(baseColor);
+  const hue = base.h;
+  const baseChroma = base.c * chromaScale;
+
+  // Maximum tint chroma — ~20 % of base chroma keeps neutrals neutral.
+  // At baseChroma=0 every color is pure gray; at baseChroma=0.185 (vivid
+  // purple) the maximum tint is ≈0.037, giving a subtle tinted cast.
+  const maxTint = baseChroma * 0.2;
+
+  /**
+   * Perceptual tint amount at a given lightness.
+   *
+   * Two-part curve:
+   *  - L ≥ 0.35: standard gamut arc, peaks near L=0.5, tapers to 0 at L=1
+   *  - L < 0.35: linear ramp down to 0 at L=0
+   *
+   * The dark-end ramp prevents warm hues (red, orange) from producing
+   * muddy browns at very low lightness, where even tiny chroma looks earthy.
+   */
+  const tintAt = (l: number, scale = 1.0): number => {
+    const arc = Math.min(1, 4 * l * (1 - l) * 2); // 0 at extremes, peaks ~0.5
+    const darkRamp = l < 0.35 ? l / 0.35 : 1.0; // linear fade below L=0.35
+    return maxTint * arc * darkRamp * scale;
+  };
+
+  const mkColor = (l: number, c?: number): string =>
+    toOKLCH({ l, c: c !== undefined ? c : tintAt(l), h: hue });
+
+  // Chart colors — always vibrant for categorical data distinction.
+  // When baseChroma is 0 (pure mono) we fall back to the shadcn neutral
+  // chart palette; otherwise we anchor chart-1 to the base hue and spread
+  // the rest evenly around the wheel.
+  const chartC = (fallback: number) => (baseChroma > 0 ? baseChroma * 1.2 : fallback);
+  const chartHue = (offset: number) => (hue + offset) % 360;
+
+  const light: Record<string, string> = {
+    // L=0.97 (not 1.0) so the tint arc produces visible chroma instead of 0
+    background: mkColor(0.97),
+    foreground: mkColor(0.145),
+    card: mkColor(0.99, tintAt(0.99, 0.3)),
+    'card-foreground': mkColor(0.145),
+    popover: mkColor(0.99, tintAt(0.99, 0.3)),
+    'popover-foreground': mkColor(0.145),
+    primary: mkColor(0.205),
+    'primary-foreground': mkColor(0.97),
+    secondary: mkColor(0.93, tintAt(0.93, 0.5)),
+    'secondary-foreground': mkColor(0.205),
+    muted: mkColor(0.93, tintAt(0.93, 0.5)),
+    'muted-foreground': mkColor(0.5),
+    accent: mkColor(0.93, tintAt(0.93, 0.5)),
+    'accent-foreground': mkColor(0.205),
+    destructive: 'oklch(0.577 0.245 27.325)',
+    'destructive-foreground': mkColor(0.97, 0),
+    border: mkColor(0.88, tintAt(0.88, 0.4)),
+    input: mkColor(0.88, tintAt(0.88, 0.4)),
+    ring: mkColor(0.6),
+    'chart-1': toOKLCH({ l: 0.646, c: chartC(0.222), h: chartHue(0) }),
+    'chart-2': toOKLCH({ l: 0.6, c: chartC(0.118), h: chartHue(180) }),
+    'chart-3': toOKLCH({ l: 0.398, c: chartC(0.07), h: chartHue(220) }),
+    'chart-4': toOKLCH({ l: 0.828, c: chartC(0.189), h: chartHue(80) }),
+    'chart-5': toOKLCH({ l: 0.769, c: chartC(0.188), h: chartHue(60) }),
+    'sidebar-background': mkColor(0.94, tintAt(0.94, 0.3)),
+    'sidebar-foreground': mkColor(0.145),
+    'sidebar-primary': mkColor(0.205),
+    'sidebar-primary-foreground': mkColor(0.97),
+    'sidebar-accent': mkColor(0.93, tintAt(0.93, 0.5)),
+    'sidebar-accent-foreground': mkColor(0.205),
+    'sidebar-border': mkColor(0.88, tintAt(0.88, 0.4)),
+    'sidebar-ring': mkColor(0.6),
+    selection: mkColor(0.88, tintAt(0.88, 0.5)),
+    'selection-foreground': mkColor(0.145),
+  };
+
+  // Colored hues (baseChroma > 0) need lighter darks to avoid warm-hue
+  // muddiness (reds/oranges turn brown at very low lightness).
+  // Pure grays (baseChroma = 0) keep shadcn's deep-black levels.
+  const tinted = baseChroma > 0;
+  const dkBg = tinted ? 0.2 : 0.145;
+  const dkSub = tinted ? 0.3 : 0.269; // secondary / muted / border
+  const dkSbr = tinted ? 0.25 : 0.205; // sidebar background
+  const dkRng = tinted ? 0.5 : 0.439; // ring
+
+  const dark: Record<string, string> = {
+    background: mkColor(dkBg),
+    foreground: mkColor(0.97),
+    card: mkColor(dkBg),
+    'card-foreground': mkColor(0.97),
+    popover: mkColor(dkBg),
+    'popover-foreground': mkColor(0.97),
+    primary: mkColor(0.97),
+    'primary-foreground': mkColor(dkBg),
+    secondary: mkColor(dkSub),
+    'secondary-foreground': mkColor(0.97),
+    muted: mkColor(dkSub),
+    // L=0.80 — enough lightness to clear WCAG AA 4.5:1 against dkSub
+    'muted-foreground': mkColor(0.8),
+    accent: mkColor(dkSub),
+    'accent-foreground': mkColor(0.97),
+    destructive: 'oklch(0.396 0.141 25.723)',
+    'destructive-foreground': mkColor(0.97, 0),
+    border: mkColor(dkSub),
+    input: mkColor(dkSub),
+    ring: mkColor(dkRng),
+    'chart-1': toOKLCH({ l: 0.488, c: chartC(0.243), h: chartHue(0) }),
+    'chart-2': toOKLCH({ l: 0.696, c: chartC(0.17), h: chartHue(180) }),
+    'chart-3': toOKLCH({ l: 0.769, c: chartC(0.188), h: chartHue(60) }),
+    'chart-4': toOKLCH({ l: 0.627, c: chartC(0.265), h: chartHue(100) }),
+    'chart-5': toOKLCH({ l: 0.645, c: chartC(0.246), h: chartHue(20) }),
+    'sidebar-background': mkColor(dkSbr),
+    'sidebar-foreground': mkColor(0.97),
+    'sidebar-primary': toOKLCH({ l: 0.488, c: chartC(0.243), h: chartHue(0) }),
+    'sidebar-primary-foreground': mkColor(0.97),
+    'sidebar-accent': mkColor(dkSub),
+    'sidebar-accent-foreground': mkColor(0.97),
+    'sidebar-border': mkColor(dkSub),
+    'sidebar-ring': mkColor(dkRng),
+    selection: mkColor(dkSub),
+    'selection-foreground': mkColor(0.97),
+  };
+
+  return Object.freeze({ light, dark });
+}
+
 export function previewTheme(theme: GeneratedTheme): void {
   console.log('\n🎨 Generated Theme Preview\n');
 

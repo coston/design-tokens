@@ -12,7 +12,7 @@ import type {
 } from './utils/types.js';
 import { flattenTokens, resolveReferences, mergeTokens } from './utils/merge-tokens.js';
 import { oklchToHex, warmGamutCache } from './utils/color-utils.js';
-import { generateThemeFromColor } from './utils/theme-generator.js';
+import { generateThemeFromColor, generateMonochromaticTheme } from './utils/theme-generator.js';
 import { themes as themeConfigs } from '../themes/themes.config.js';
 import {
   validateTokens,
@@ -62,8 +62,17 @@ const createThemeVariant = (
   theme: { name, selector, overrides },
 });
 
-function generateThemeVariants(config: { name: string; baseColor: string }) {
-  const generatedTheme = generateThemeFromColor({ baseColor: config.baseColor });
+function generateThemeVariants(config: {
+  name: string;
+  baseColor: string;
+  variant?: 'default' | 'monochromatic';
+  tokens?: { light: Record<string, string>; dark: Record<string, string> };
+}) {
+  const generatedTheme =
+    config.tokens ??
+    (config.variant === 'monochromatic'
+      ? generateMonochromaticTheme({ baseColor: config.baseColor })
+      : generateThemeFromColor({ baseColor: config.baseColor }));
 
   const lightSelector = config.name === 'light' ? ':root' : `[data-theme="${config.name}"]`;
   const darkName = config.name === 'light' ? 'dark' : `${config.name}-dark`;

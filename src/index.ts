@@ -22,6 +22,7 @@
 // Theme generation - the only utility most users need
 export {
   generateThemeFromColor,
+  generateMonochromaticTheme,
   type GeneratedTheme,
   type ThemeGeneratorOptions,
 } from './build/utils/theme-generator.js';
