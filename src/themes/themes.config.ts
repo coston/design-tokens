@@ -37,4 +37,10 @@ export const themes: ThemeConfig[] = [
     // Chroma 0.15: Near maximum for magenta at L=0.6 in sRGB (~0.22-0.24)
     baseColor: 'oklch(0.6 0.185 300)',
   },
+  {
+    name: 'monochrome',
+    // 0 chroma - fully achromatic (no hue), pure grayscale
+    // Convention: Neutral, minimal aesthetic with no color bias
+    baseColor: 'oklch(0.6 0 0)',
+  },
 ];
