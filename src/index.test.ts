@@ -169,7 +169,7 @@ describe('Public API Contract', () => {
 
     it('should use lifted dark background for colored hues to avoid muddiness', () => {
       const theme = generateMonochromaticTheme({ baseColor: 'oklch(0.6 0.185 300)' });
-      expect(parseOKLCH(theme.dark.background).l).toBeCloseTo(0.2, 2);
+      expect(parseOKLCH(theme.dark.background).l).toBeCloseTo(0.24, 2);
     });
 
     it('should tint all tokens at the base hue for colored inputs', () => {

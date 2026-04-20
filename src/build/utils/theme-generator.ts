@@ -522,17 +522,18 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
   // muddiness (reds/oranges turn brown at very low lightness).
   // Pure grays (baseChroma = 0) keep shadcn's deep-black levels.
   const tinted = baseChroma > 0;
-  const dkBg = tinted ? 0.2 : 0.145;
+  const dkBg = tinted ? 0.24 : 0.145;
+  const dkCard = tinted ? 0.27 : 0.18; // cards lighter than bg for elevation
   const dkSub = tinted ? 0.3 : 0.269; // secondary / muted / border
-  const dkSbr = tinted ? 0.14 : 0.1; // sidebar background — darker than main bg
+  const dkSbr = tinted ? 0.1 : 0.08; // sidebar — noticeably darker than bg
   const dkRng = tinted ? 0.5 : 0.439; // ring
 
   const dark: Record<string, string> = {
     background: mkColor(dkBg),
     foreground: mkColor(0.97),
-    card: mkColor(dkBg),
+    card: mkColor(dkCard),
     'card-foreground': mkColor(0.97),
-    popover: mkColor(dkBg),
+    popover: mkColor(dkCard),
     'popover-foreground': mkColor(0.97),
     primary: mkColor(0.97),
     'primary-foreground': mkColor(dkBg),
