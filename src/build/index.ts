@@ -294,6 +294,9 @@ ${baseLayer}
 }
 `;
   writeFileSync(join(distDir, 'tailwind.css'), tailwindCSS);
+  // Also write to package root so PostCSS can resolve `@coston/design-tokens/tailwind.css`
+  // without needing Node.js exports map support (which PostCSS lacks).
+  writeFileSync(join(rootDir, 'tailwind.css'), tailwindCSS);
   console.log('   Generated tailwind.css');
 
   const tokensJSON = {
