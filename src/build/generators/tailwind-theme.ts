@@ -40,7 +40,7 @@ export function generateTailwindTheme(_baseTokens: FlatTokens): string {
     'chart-3': '--color-chart-3',
     'chart-4': '--color-chart-4',
     'chart-5': '--color-chart-5',
-    'sidebar-background': '--color-sidebar-background',
+    'sidebar-background': '--color-sidebar',
     'sidebar-foreground': '--color-sidebar-foreground',
     'sidebar-primary': '--color-sidebar-primary',
     'sidebar-primary-foreground': '--color-sidebar-primary-foreground',
