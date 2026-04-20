@@ -10,10 +10,14 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./tailwind.css": "./tailwind.css",
+    "./tokens.css": "./tokens.css",
     "./*": "./dist/*"
   },
   "files": [
-    "dist"
+    "dist",
+    "tailwind.css",
+    "tokens.css"
   ],
   "sideEffects": [
     "*.css"

@@ -271,7 +271,9 @@ async function build() {
   mkdirSync(distDir, { recursive: true });
 
   console.log('\nGenerating CSS files...');
-  writeFileSync(join(distDir, 'tokens.css'), generateTokensCSS(resolvedThemes));
+  const tokensCSSContent = generateTokensCSS(resolvedThemes);
+  writeFileSync(join(distDir, 'tokens.css'), tokensCSSContent);
+  writeFileSync(join(rootDir, 'tokens.css'), tokensCSSContent);
   console.log('   Generated tokens.css');
 
   const tailwindTheme = generateTailwindTheme(resolvedSemantic);
@@ -294,6 +296,7 @@ ${baseLayer}
 }
 `;
   writeFileSync(join(distDir, 'tailwind.css'), tailwindCSS);
+  writeFileSync(join(rootDir, 'tailwind.css'), tailwindCSS);
   console.log('   Generated tailwind.css');
 
   const tokensJSON = {
@@ -306,6 +309,8 @@ ${baseLayer}
 
   console.log('\nBuild complete!\n');
   console.log('Generated artifacts:');
+  console.log('   - tokens.css (CSS variables, package root)');
+  console.log('   - tailwind.css (Tailwind utilities, package root)');
   console.log('   - dist/tokens.css (CSS variables)');
   console.log('   - dist/tailwind.css (Tailwind utilities)');
   console.log('   - dist/tokens.json (token data)');
