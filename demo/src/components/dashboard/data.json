@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "header": "Cover Page",
+    "type": "Cover Page",
+    "target": "3",
+    "limit": "5",
+    "reviewer": "Eddie Lake"
+  },
+  {
+    "id": 2,
+    "header": "Table of Contents",
+    "type": "Table of Contents",
+    "target": "2",
+    "limit": "3",
+    "reviewer": "Eddie Lake"
+  },
+  {
+    "id": 3,
+    "header": "Executive Summary",
+    "type": "Executive Summary",
+    "target": "5",
+    "limit": "8",
+    "reviewer": "Jamik Tashpulatov"
+  },
+  {
+    "id": 4,
+    "header": "Technical Approach",
+    "type": "Technical Approach",
+    "target": "12",
+    "limit": "15",
+    "reviewer": "Emily Whalen"
+  },
+  {
+    "id": 5,
+    "header": "Design Philosophy",
+    "type": "Design",
+    "target": "8",
+    "limit": "10",
+    "reviewer": "Assign reviewer"
+  },
+  {
+    "id": 6,
+    "header": "Implementation Plan",
+    "type": "Narrative",
+    "target": "10",
+    "limit": "12",
+    "reviewer": "Jamik Tashpulatov"
+  },
+  {
+    "id": 7,
+    "header": "Capabilities Overview",
+    "type": "Capabilities",
+    "target": "6",
+    "limit": "8",
+    "reviewer": "Assign reviewer"
+  },
+  {
+    "id": 8,
+    "header": "Focus Documents",
+    "type": "Focus Documents",
+    "target": "4",
+    "limit": "6",
+    "reviewer": "Emily Whalen"
+  }
+]

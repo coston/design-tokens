@@ -506,13 +506,13 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
     'chart-3': toOKLCH({ l: 0.398, c: chartC(0.07), h: chartHue(220) }),
     'chart-4': toOKLCH({ l: 0.828, c: chartC(0.189), h: chartHue(80) }),
     'chart-5': toOKLCH({ l: 0.769, c: chartC(0.188), h: chartHue(60) }),
-    'sidebar-background': mkColor(0.94, tintAt(0.94, 0.3)),
-    'sidebar-foreground': mkColor(0.145),
-    'sidebar-primary': mkColor(0.205),
-    'sidebar-primary-foreground': mkColor(0.97),
-    'sidebar-accent': mkColor(0.93, tintAt(0.93, 0.5)),
-    'sidebar-accent-foreground': mkColor(0.205),
-    'sidebar-border': mkColor(0.88, tintAt(0.88, 0.4)),
+    'sidebar-background': mkColor(0.93, tintAt(0.93, 0.3)),
+    'sidebar-foreground': mkColor(0.2),
+    'sidebar-primary': mkColor(0.6),
+    'sidebar-primary-foreground': mkColor(0.98),
+    'sidebar-accent': mkColor(0.9, tintAt(0.9, 0.4)),
+    'sidebar-accent-foreground': mkColor(0.2),
+    'sidebar-border': mkColor(0.82, tintAt(0.82, 0.3)),
     'sidebar-ring': mkColor(0.6),
     selection: mkColor(0.88, tintAt(0.88, 0.5)),
     'selection-foreground': mkColor(0.145),
@@ -522,17 +522,18 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
   // muddiness (reds/oranges turn brown at very low lightness).
   // Pure grays (baseChroma = 0) keep shadcn's deep-black levels.
   const tinted = baseChroma > 0;
-  const dkBg = tinted ? 0.2 : 0.145;
+  const dkBg = tinted ? 0.24 : 0.145;
+  const dkCard = tinted ? 0.27 : 0.18; // cards lighter than bg for elevation
   const dkSub = tinted ? 0.3 : 0.269; // secondary / muted / border
-  const dkSbr = tinted ? 0.25 : 0.205; // sidebar background
+  const dkSbr = tinted ? 0.1 : 0.08; // sidebar — noticeably darker than bg
   const dkRng = tinted ? 0.5 : 0.439; // ring
 
   const dark: Record<string, string> = {
     background: mkColor(dkBg),
     foreground: mkColor(0.97),
-    card: mkColor(dkBg),
+    card: mkColor(dkCard),
     'card-foreground': mkColor(0.97),
-    popover: mkColor(dkBg),
+    popover: mkColor(dkCard),
     'popover-foreground': mkColor(0.97),
     primary: mkColor(0.97),
     'primary-foreground': mkColor(dkBg),
@@ -554,12 +555,12 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
     'chart-4': toOKLCH({ l: 0.627, c: chartC(0.265), h: chartHue(100) }),
     'chart-5': toOKLCH({ l: 0.645, c: chartC(0.246), h: chartHue(20) }),
     'sidebar-background': mkColor(dkSbr),
-    'sidebar-foreground': mkColor(0.97),
-    'sidebar-primary': toOKLCH({ l: 0.488, c: chartC(0.243), h: chartHue(0) }),
-    'sidebar-primary-foreground': mkColor(0.97),
-    'sidebar-accent': mkColor(dkSub),
-    'sidebar-accent-foreground': mkColor(0.97),
-    'sidebar-border': mkColor(dkSub),
+    'sidebar-foreground': mkColor(0.95),
+    'sidebar-primary': mkColor(0.82),
+    'sidebar-primary-foreground': mkColor(0.12),
+    'sidebar-accent': mkColor(tinted ? 0.22 : 0.2),
+    'sidebar-accent-foreground': mkColor(0.95),
+    'sidebar-border': mkColor(tinted ? 0.27 : 0.22),
     'sidebar-ring': mkColor(dkRng),
     selection: mkColor(dkSub),
     'selection-foreground': mkColor(0.97),
