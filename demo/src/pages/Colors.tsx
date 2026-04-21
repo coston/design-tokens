@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
 
 const colorGroups = [
   {

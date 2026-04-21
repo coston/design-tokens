@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
+import { Button } from '@coston/ui/button';
 import { Download, Copy, Check, Info } from 'lucide-react';
 import type { GeneratedTheme } from '@coston/design-tokens';
 

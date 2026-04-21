@@ -1,21 +1,10 @@
 import * as React from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useIsMobile } from '@coston/ui/hooks/use-mobile';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@coston/ui/chart';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@coston/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@coston/ui/toggle-group';
 
 const chartData = [
   { date: '2024-04-01', desktop: 222, mobile: 150 },

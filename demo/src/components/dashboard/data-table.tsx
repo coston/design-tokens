@@ -22,9 +22,9 @@ import {
   PlusIcon,
 } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@coston/ui/badge';
+import { Button } from '@coston/ui/button';
+import { Checkbox } from '@coston/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -32,25 +32,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@coston/ui/dropdown-menu';
+import { Input } from '@coston/ui/input';
+import { Label } from '@coston/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@coston/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@coston/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@coston/ui/tabs';
 
 type DataRow = {
   id: number;

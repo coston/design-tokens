@@ -1,5 +1,5 @@
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+import { Label } from '@coston/ui/label';
+import { Badge } from '@coston/ui/badge';
 
 interface RadiusInputProps {
   radius: number;

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
+import { Button } from '@coston/ui/button';
+import { Label } from '@coston/ui/label';
+import { Badge } from '@coston/ui/badge';
 import { Palette, Sun, Moon } from 'lucide-react';
 import { ColorInput } from '@/components/theme-creator/ColorInput';
 import { ThemePreview } from '@/components/theme-creator/ThemePreview';

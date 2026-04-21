@@ -1,8 +1,8 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback } from '@coston/ui/avatar';
+import { Badge } from '@coston/ui/badge';
+import { Button } from '@coston/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
+import { Separator } from '@coston/ui/separator';
 import { Bookmark, Calendar, Clock, Heart, MessageCircle, Share2 } from 'lucide-react';
 
 function FontShowcase() {

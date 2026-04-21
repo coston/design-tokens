@@ -11,6 +11,7 @@ export default defineConfig({
       '@internal/color-utils': path.resolve(__dirname, '../src/build/utils/color-utils.ts'),
       '@internal/contrast': path.resolve(__dirname, '../src/build/utils/contrast-validation.ts'),
     },
+    preserveSymlinks: true,
   },
   base: process.env.GITHUB_PAGES ? '/design-tokens/' : '/',
 });

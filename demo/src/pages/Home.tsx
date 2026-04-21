@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Button } from '@coston/ui/button';
 import {
   Card,
   CardContent,
@@ -8,11 +8,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+} from '@coston/ui/card';
+import { Input } from '@coston/ui/input';
+import { Label } from '@coston/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@coston/ui/tabs';
+import { Badge } from '@coston/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@coston/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +29,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@coston/ui/dropdown-menu';
 import { ChevronDown, Settings, User, LogOut, BookOpen, Code, Palette } from 'lucide-react';
 
 export function HomePage() {

@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { AlertCircle, Info, ShieldAlert, Trash2, User, Bell, Paintbrush } from 'lucide-react';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@coston/ui/accordion';
+import { Alert, AlertTitle, AlertDescription } from '@coston/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,8 +13,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+} from '@coston/ui/alert-dialog';
+import { Avatar, AvatarImage, AvatarFallback } from '@coston/ui/avatar';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -27,23 +22,17 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
+} from '@coston/ui/breadcrumb';
+import { Button } from '@coston/ui/button';
+import { Card, CardContent } from '@coston/ui/card';
+import { Input } from '@coston/ui/input';
+import { Label } from '@coston/ui/label';
+import { Progress } from '@coston/ui/progress';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@coston/ui/select';
+import { Separator } from '@coston/ui/separator';
+import { Skeleton } from '@coston/ui/skeleton';
+import { Slider } from '@coston/ui/slider';
+import { Switch } from '@coston/ui/switch';
 
 export function SettingsPage() {
   const [showSkeleton, setShowSkeleton] = React.useState(false);

@@ -11,13 +11,13 @@ import {
   Upload,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@coston/ui/lib/utils';
+import { Avatar, AvatarFallback } from '@coston/ui/avatar';
+import { Badge } from '@coston/ui/badge';
+import { Button } from '@coston/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
+import { Separator } from '@coston/ui/separator';
+import { ScrollArea } from '@coston/ui/scroll-area';
 import {
   Menubar,
   MenubarMenu,
@@ -25,7 +25,7 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarSeparator,
-} from '@/components/ui/menubar';
+} from '@coston/ui/menubar';
 import {
   Command,
   CommandInput,
@@ -33,7 +33,7 @@ import {
   CommandGroup,
   CommandItem,
   CommandEmpty,
-} from '@/components/ui/command';
+} from '@coston/ui/command';
 import {
   Pagination,
   PaginationContent,
@@ -42,7 +42,7 @@ import {
   PaginationPrevious,
   PaginationNext,
   PaginationEllipsis,
-} from '@/components/ui/pagination';
+} from '@coston/ui/pagination';
 
 type NotificationType = 'info' | 'warning' | 'success';
 

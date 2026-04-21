@@ -18,24 +18,24 @@ import {
   Trash2,
   Users2,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { cn } from '@coston/ui/lib/utils';
+import { Avatar, AvatarFallback } from '@coston/ui/avatar';
+import { Badge } from '@coston/ui/badge';
+import { Button } from '@coston/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+} from '@coston/ui/dropdown-menu';
+import { Input } from '@coston/ui/input';
+import { Label } from '@coston/ui/label';
+import { ScrollArea } from '@coston/ui/scroll-area';
+import { Separator } from '@coston/ui/separator';
+import { Switch } from '@coston/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@coston/ui/tabs';
+import { Textarea } from '@coston/ui/textarea';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@coston/ui/tooltip';
 
 type Mail = {
   id: string;

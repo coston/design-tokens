@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Moon, Sun, Palette, Check } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
+import { Separator } from '@coston/ui/separator';
+import { SidebarTrigger } from '@coston/ui/sidebar';
+import { Button } from '@coston/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@coston/ui/dropdown-menu';
 import tokens from '@coston/design-tokens/tokens.json';
 
 const availableThemes = Object.keys(tokens.themes)

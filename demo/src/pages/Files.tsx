@@ -19,22 +19,22 @@ import {
   FileCode,
   Music,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { cn } from '@coston/ui/lib/utils';
+import { Badge } from '@coston/ui/badge';
+import { Button } from '@coston/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@coston/ui/collapsible';
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { Input } from '@/components/ui/input';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+} from '@coston/ui/context-menu';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@coston/ui/hover-card';
+import { Input } from '@coston/ui/input';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@coston/ui/resizable';
+import { ScrollArea } from '@coston/ui/scroll-area';
+import { Separator } from '@coston/ui/separator';
 import {
   Sheet,
   SheetContent,
@@ -42,15 +42,8 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+} from '@coston/ui/sheet';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@coston/ui/table';
 
 type FileItem = {
   id: string;

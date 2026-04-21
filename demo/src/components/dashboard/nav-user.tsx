@@ -5,7 +5,7 @@ import {
   MoreVerticalIcon,
   UserCircleIcon,
 } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@coston/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,13 +14,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from '@/components/ui/sidebar';
+} from '@coston/ui/dropdown-menu';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@coston/ui/sidebar';
 
 export function NavUser({
   user,

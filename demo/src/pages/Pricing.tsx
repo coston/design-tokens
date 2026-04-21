@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
+import { Button } from '@coston/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@coston/ui/card';
+import { Separator } from '@coston/ui/separator';
+import { Switch } from '@coston/ui/switch';
 
 const plans = [
   {

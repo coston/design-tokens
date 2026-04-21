@@ -1,26 +1,26 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon, Upload, Image, Film, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { cn } from '@coston/ui/lib/utils';
+import { Badge } from '@coston/ui/badge';
+import { Button } from '@coston/ui/button';
+import { Card, CardContent } from '@coston/ui/card';
+import { Calendar } from '@coston/ui/calendar';
+import { AspectRatio } from '@coston/ui/aspect-ratio';
 import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuLink,
   navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
+} from '@coston/ui/navigation-menu';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from '@/components/ui/carousel';
+} from '@coston/ui/carousel';
 import {
   Drawer,
   DrawerTrigger,
@@ -30,15 +30,9 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from '@/components/ui/drawer';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+} from '@coston/ui/drawer';
+import { Popover, PopoverTrigger, PopoverContent } from '@coston/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@coston/ui/select';
 
 interface FeaturedItem {
   id: string;

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@coston/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
+import { Input } from '@coston/ui/input';
+import { Label } from '@coston/ui/label';
+import { Badge } from '@coston/ui/badge';
 import type { GeneratedTheme } from '@coston/design-tokens';
 
 interface ThemePreviewProps {

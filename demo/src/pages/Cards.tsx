@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 import { ArrowUpIcon, Circle, MinusIcon, PlusIcon, Star } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@coston/ui/avatar';
+import { Button } from '@coston/ui/button';
 import {
   Card,
   CardContent,
@@ -10,27 +10,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '@coston/ui/card';
+import { Checkbox } from '@coston/ui/checkbox';
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+} from '@coston/ui/chart';
+import { Input } from '@coston/ui/input';
+import { Label } from '@coston/ui/label';
+import { RadioGroup, RadioGroupItem } from '@coston/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@coston/ui/select';
+import { Separator } from '@coston/ui/separator';
+import { Switch } from '@coston/ui/switch';
+import { Textarea } from '@coston/ui/textarea';
 
 // --- Stats Card ---
 const revenueData = [

@@ -5,7 +5,7 @@ import { SectionCards } from '@/components/dashboard/section-cards';
 import { SiteHeader } from '@/components/dashboard/site-header';
 import { ChartBarMixed } from '@/components/dashboard/chart-bar-mixed';
 import { ChartPieDonut } from '@/components/dashboard/chart-pie-donut';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider } from '@coston/ui/sidebar';
 
 import data from './data.json';
 

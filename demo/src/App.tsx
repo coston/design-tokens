@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
 import { SiteHeader } from '@/components/dashboard/site-header';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { Toaster } from '@/components/ui/sonner';
+import { SidebarInset, SidebarProvider } from '@coston/ui/sidebar';
+import { Toaster } from '@coston/ui/sonner';
 import { DashboardPage } from '@/pages/Dashboard';
 import { CardsPage } from '@/pages/Cards';
 import { PricingPage } from '@/pages/Pricing';

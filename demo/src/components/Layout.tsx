@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Moon, Sun, Palette, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@coston/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,8 +9,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
+} from '@coston/ui/dropdown-menu';
+import { cn } from '@coston/ui/lib/utils';
 import tokens from '@coston/design-tokens/tokens.json';
 
 interface LayoutProps {

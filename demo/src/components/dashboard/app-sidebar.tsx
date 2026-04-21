@@ -26,7 +26,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from '@coston/ui/sidebar';
 
 const data = {
   user: {

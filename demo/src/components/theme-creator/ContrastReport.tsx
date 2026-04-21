@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
+import { Badge } from '@coston/ui/badge';
+import { Button } from '@coston/ui/button';
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react';
 // Demo-specific imports (not part of public API)
 import { oklchToHex } from '@internal/color-utils';

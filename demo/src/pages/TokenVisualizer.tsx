@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@coston/ui/card';
 
 interface TokenSwatchProps {
   name: string;
@@ -7,9 +7,7 @@ interface TokenSwatchProps {
 }
 
 function TokenSwatch({ name, cssVar, description }: TokenSwatchProps) {
-  const computedValue = getComputedStyle(document.documentElement)
-    .getPropertyValue(cssVar)
-    .trim();
+  const computedValue = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
 
   return (
     <div className="flex items-center gap-4 p-4 rounded-lg border border-border">
@@ -19,15 +17,11 @@ function TokenSwatch({ name, cssVar, description }: TokenSwatchProps) {
       />
       <div className="flex-1 min-w-0">
         <div className="font-mono text-sm font-semibold">{name}</div>
-        <div className="text-xs text-muted-foreground font-mono truncate">
-          {cssVar}
-        </div>
+        <div className="text-xs text-muted-foreground font-mono truncate">{cssVar}</div>
         <div className="text-xs text-muted-foreground mt-1 truncate">
           {computedValue || 'Not set'}
         </div>
-        {description && (
-          <div className="text-xs text-muted-foreground mt-1">{description}</div>
-        )}
+        {description && <div className="text-xs text-muted-foreground mt-1">{description}</div>}
       </div>
     </div>
   );
@@ -40,13 +34,21 @@ export function TokenVisualizerPage() {
     { name: 'primary', cssVar: '--primary', description: 'Primary actions' },
     { name: 'primary-foreground', cssVar: '--primary-foreground', description: 'Text on primary' },
     { name: 'secondary', cssVar: '--secondary', description: 'Secondary actions' },
-    { name: 'secondary-foreground', cssVar: '--secondary-foreground', description: 'Text on secondary' },
+    {
+      name: 'secondary-foreground',
+      cssVar: '--secondary-foreground',
+      description: 'Text on secondary',
+    },
     { name: 'muted', cssVar: '--muted', description: 'Subtle backgrounds' },
     { name: 'muted-foreground', cssVar: '--muted-foreground', description: 'Subtle text' },
     { name: 'accent', cssVar: '--accent', description: 'Accent highlights' },
     { name: 'accent-foreground', cssVar: '--accent-foreground', description: 'Text on accent' },
     { name: 'destructive', cssVar: '--destructive', description: 'Destructive actions' },
-    { name: 'destructive-foreground', cssVar: '--destructive-foreground', description: 'Text on destructive' },
+    {
+      name: 'destructive-foreground',
+      cssVar: '--destructive-foreground',
+      description: 'Text on destructive',
+    },
     { name: 'card', cssVar: '--card', description: 'Card backgrounds' },
     { name: 'card-foreground', cssVar: '--card-foreground', description: 'Card text' },
     { name: 'popover', cssVar: '--popover', description: 'Popover backgrounds' },
@@ -93,7 +95,7 @@ export function TokenVisualizerPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
-            {colorTokens.map((token) => (
+            {colorTokens.map(token => (
               <TokenSwatch key={token.name} {...token} />
             ))}
           </div>
@@ -109,7 +111,7 @@ export function TokenVisualizerPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {chartTokens.map((token) => (
+            {chartTokens.map(token => (
               <TokenSwatch key={token.name} {...token} />
             ))}
           </div>
@@ -119,13 +121,11 @@ export function TokenVisualizerPage() {
       <Card>
         <CardHeader>
           <CardTitle>Sidebar Tokens</CardTitle>
-          <CardDescription>
-            Specific tokens for sidebar components
-          </CardDescription>
+          <CardDescription>Specific tokens for sidebar components</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
-            {sidebarTokens.map((token) => (
+            {sidebarTokens.map(token => (
               <TokenSwatch key={token.name} {...token} />
             ))}
           </div>
@@ -148,9 +148,7 @@ export function TokenVisualizerPage() {
                 <div className="font-mono text-sm font-semibold">radius</div>
                 <div className="text-xs text-muted-foreground font-mono">--radius</div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  {getComputedStyle(document.documentElement)
-                    .getPropertyValue('--radius')
-                    .trim()}
+                  {getComputedStyle(document.documentElement).getPropertyValue('--radius').trim()}
                 </div>
               </div>
             </div>

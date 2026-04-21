@@ -1,4 +1,4 @@
-import { Label } from '@/components/ui/label';
+import { Label } from '@coston/ui/label';
 // Demo-specific imports (not part of public API)
 import { toOKLCH, oklchToHex } from '@internal/color-utils';
 
