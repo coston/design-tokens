@@ -3,11 +3,21 @@
  */
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
-import { execSync } from 'node:child_process';
+import { join, relative } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { flattenW3CTokens, resolveW3CReferences } from '../build/utils/w3c-parser.js';
 import type { FlatTokens } from '../build/utils/types.js';
 import type { LoadedTokens, Config } from './types.js';
+
+const SAFE_GIT_REF = /^[\w.\-/~^@{}:]+$/;
+
+function gitExec(args: string[], cwd: string): string {
+  const result = spawnSync('git', args, { cwd, encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+  if (result.status !== 0) {
+    throw new Error(result.stderr?.trim() || `git ${args[0]} failed`);
+  }
+  return result.stdout;
+}
 
 function isDTCGFile(obj: Record<string, unknown>): boolean {
   if (typeof obj.$schema === 'string' && obj.$schema.includes('design-tokens')) return true;
@@ -35,13 +45,28 @@ function findJsonFiles(dir: string): string[] {
   return results;
 }
 
+function matchesGlob(filePath: string, baseDir: string, pattern: string): boolean {
+  const rel = relative(baseDir, filePath);
+  const parts = pattern.split('*');
+  if (parts.length === 1) return rel === pattern;
+  if (parts.length === 2) {
+    const [prefix, suffix] = parts;
+    return rel.startsWith(prefix) && rel.endsWith(suffix);
+  }
+  // Multi-glob: just check prefix and suffix
+  return rel.startsWith(parts[0]) && rel.endsWith(parts[parts.length - 1]);
+}
+
 function discoverTokenFiles(dir: string, config?: Config): string[] {
   if (config?.tokenPaths?.length) {
     const files: string[] = [];
     for (const pattern of config.tokenPaths) {
       if (pattern.includes('*')) {
         const baseDir = join(dir, pattern.split('*')[0]);
-        if (existsSync(baseDir)) files.push(...findJsonFiles(baseDir));
+        if (existsSync(baseDir)) {
+          const found = findJsonFiles(baseDir);
+          files.push(...found.filter(f => matchesGlob(f, dir, pattern)));
+        }
       } else {
         const fullPath = join(dir, pattern);
         if (existsSync(fullPath) && statSync(fullPath).isFile()) files.push(fullPath);
@@ -72,6 +97,18 @@ function hasReferences(flat: FlatTokens): boolean {
   return Object.values(flat).some(v => isReference(v));
 }
 
+function shouldIgnore(filePath: string, dir: string, config?: Config): boolean {
+  if (!config?.lint?.ignorePaths?.length) return false;
+  const rel = relative(dir, filePath);
+  return config.lint.ignorePaths.some(pattern => {
+    if (pattern.includes('**')) {
+      const prefix = pattern.split('**')[0];
+      return rel.startsWith(prefix);
+    }
+    return rel.startsWith(pattern);
+  });
+}
+
 export function loadTokensFromDisk(dir: string, config?: Config): LoadedTokens {
   const files = discoverTokenFiles(dir, config);
   const rawFiles = new Map<string, Record<string, unknown>>();
@@ -79,6 +116,7 @@ export function loadTokensFromDisk(dir: string, config?: Config): LoadedTokens {
   const semanticTokens: FlatTokens = {};
 
   for (const file of files) {
+    if (shouldIgnore(file, dir, config)) continue;
     try {
       const content = JSON.parse(readFileSync(file, 'utf-8')) as Record<string, unknown>;
       if (!isDTCGFile(content)) continue;
@@ -86,8 +124,9 @@ export function loadTokensFromDisk(dir: string, config?: Config): LoadedTokens {
       const flat = flattenW3CTokens(content as Parameters<typeof flattenW3CTokens>[0]);
       if (hasReferences(flat)) Object.assign(semanticTokens, flat);
       else Object.assign(coreTokens, flat);
-    } catch {
-      // skip
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      process.stderr.write(`warning: skipping ${file}: ${msg}\n`);
     }
   }
 
@@ -109,25 +148,19 @@ export function loadTokensFromDisk(dir: string, config?: Config): LoadedTokens {
 }
 
 export function loadTokensFromGitRef(dir: string, ref: string, _config?: Config): LoadedTokens {
-  const repoRoot = execSync('git rev-parse --show-toplevel', {
-    cwd: dir,
-    encoding: 'utf-8',
-  }).trim();
+  if (!SAFE_GIT_REF.test(ref)) {
+    throw new Error(`Invalid git ref: ${ref}`);
+  }
+
+  const repoRoot = gitExec(['rev-parse', '--show-toplevel'], dir).trim();
 
   let filePaths: string[];
   try {
-    // Try tokens/ then src/tokens/
     let output = '';
     try {
-      output = execSync(`git ls-tree -r --name-only ${ref} -- tokens/`, {
-        cwd: repoRoot,
-        encoding: 'utf-8',
-      });
+      output = gitExec(['ls-tree', '-r', '--name-only', ref, '--', 'tokens/'], repoRoot);
     } catch {
-      output = execSync(`git ls-tree -r --name-only ${ref} -- src/tokens/`, {
-        cwd: repoRoot,
-        encoding: 'utf-8',
-      });
+      output = gitExec(['ls-tree', '-r', '--name-only', ref, '--', 'src/tokens/'], repoRoot);
     }
     filePaths = output
       .trim()
@@ -143,14 +176,14 @@ export function loadTokensFromGitRef(dir: string, ref: string, _config?: Config)
 
   for (const filePath of filePaths) {
     try {
-      const content = execSync(`git show ${ref}:${filePath}`, { cwd: repoRoot, encoding: 'utf-8' });
+      const content = gitExec(['show', `${ref}:${filePath}`], repoRoot);
       const parsed = JSON.parse(content) as Record<string, unknown>;
       rawFiles.set(join(repoRoot, filePath), parsed);
       const flat = flattenW3CTokens(parsed as Parameters<typeof flattenW3CTokens>[0]);
       if (hasReferences(flat)) Object.assign(semanticTokens, flat);
       else Object.assign(coreTokens, flat);
     } catch {
-      // skip
+      // git show may fail for deleted files in older refs
     }
   }
 

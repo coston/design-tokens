@@ -4,41 +4,7 @@
 
 import type { LintIssue, LintResult, LoadedTokens, Config } from './types.js';
 import type { FlatTokens } from '../build/utils/types.js';
-
-// ---------------------------------------------------------------------------
-// Hex contrast utilities (independent of OKLCH pipeline)
-// ---------------------------------------------------------------------------
-
-function sRGBLinear(c: number): number {
-  const s = c / 255;
-  return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
-}
-
-function hexLuminance(hex: string): number {
-  const h = hex.replace('#', '');
-  return (
-    0.2126 * sRGBLinear(parseInt(h.slice(0, 2), 16)) +
-    0.7152 * sRGBLinear(parseInt(h.slice(2, 4), 16)) +
-    0.0722 * sRGBLinear(parseInt(h.slice(4, 6), 16))
-  );
-}
-
-function hexContrast(a: string, b: string): number {
-  const l1 = hexLuminance(a);
-  const l2 = hexLuminance(b);
-  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-}
-
-function isHex(v: string): boolean {
-  return /^#[0-9a-fA-F]{6}$/.test(v);
-}
-
-function wcagLevel(ratio: number): string {
-  if (ratio >= 7) return 'AAA';
-  if (ratio >= 4.5) return 'AA';
-  if (ratio >= 3) return 'AA Large';
-  return 'Fail';
-}
+import { isHex, hexContrast, wcagLevel, resolveAnnotationPair } from './wcag-utils.js';
 
 // ---------------------------------------------------------------------------
 // Rules
@@ -70,9 +36,7 @@ function missingPairs(resolved: FlatTokens): LintIssue[] {
     if (key.endsWith('-foreground')) continue;
     const last = key.split('.').pop() ?? '';
     if (PAIR_EXCEPTIONS.has(last)) continue;
-    if (!key.startsWith('color.') && !key.startsWith('sidebar.') && !key.startsWith('chart.'))
-      continue;
-    if (key.startsWith('chart.')) continue;
+    if (!key.startsWith('color.') && !key.startsWith('sidebar.')) continue;
     if (!keys.has(`${key}-foreground`)) {
       issues.push({
         rule: 'missing-pairs',
@@ -93,19 +57,15 @@ function wcagContrast(resolved: FlatTokens, minimum = 4.5): LintIssue[] {
     const fg = resolved[key];
     const bg = resolved[bgKey];
     if (!fg || !bg || !isHex(fg) || !isHex(bg)) continue;
-    try {
-      const ratio = Math.round(hexContrast(fg, bg) * 100) / 100;
-      if (ratio < minimum) {
-        issues.push({
-          rule: 'wcag-contrast',
-          severity: 'error',
-          token: `${key} / ${bgKey}`,
-          message: `Contrast ratio ${ratio.toFixed(2)}:1 fails WCAG AA (minimum ${minimum}:1)`,
-          details: { foreground: fg, background: bg, ratio, level: wcagLevel(ratio) },
-        });
-      }
-    } catch {
-      /* skip */
+    const ratio = Math.round(hexContrast(fg, bg) * 100) / 100;
+    if (ratio < minimum) {
+      issues.push({
+        rule: 'wcag-contrast',
+        severity: 'error',
+        token: `${key} / ${bgKey}`,
+        message: `Contrast ratio ${ratio.toFixed(2)}:1 fails WCAG AA (minimum ${minimum}:1)`,
+        details: { foreground: fg, background: bg, ratio, level: wcagLevel(ratio) },
+      });
     }
   }
   return issues;
@@ -141,19 +101,15 @@ function walkCheck(
         if (!pair) continue;
         const [fg, bg] = pair;
         if (!isHex(fg) || !isHex(bg)) continue;
-        try {
-          const computed = Math.round(hexContrast(fg, bg) * 100) / 100;
-          const level = wcagLevel(computed);
-          if (e.ratio !== computed || e.level !== level) {
-            issues.push({
-              rule: 'stale-annotations',
-              severity: 'warning',
-              token: path,
-              message: `Stale WCAG annotation [${key}]: source says ${e.ratio}:1 (${e.level}), computed ${computed}:1 (${level})`,
-            });
-          }
-        } catch {
-          /* skip */
+        const computed = Math.round(hexContrast(fg, bg) * 100) / 100;
+        const level = wcagLevel(computed);
+        if (e.ratio !== computed || e.level !== level) {
+          issues.push({
+            rule: 'stale-annotations',
+            severity: 'warning',
+            token: path,
+            message: `Stale WCAG annotation [${key}]: source says ${e.ratio}:1 (${e.level}), computed ${computed}:1 (${level})`,
+          });
         }
       }
     }
@@ -163,32 +119,6 @@ function walkCheck(
     if (k.startsWith('$') || typeof v !== 'object' || v === null) continue;
     walkCheck(v as Record<string, unknown>, path ? `${path}.${k}` : k, resolved, issues);
   }
-}
-
-function resolveAnnotationPair(
-  key: string,
-  tokenPath: string,
-  resolved: FlatTokens
-): [string, string] | null {
-  const hex = resolved[tokenPath];
-  if (!hex || !isHex(hex)) return null;
-  if (key === 'onWhite') return [hex, '#FFFFFF'];
-  if (key === 'whiteOn') return ['#FFFFFF', hex];
-  if (key.startsWith('on')) {
-    const name = key.slice(2);
-    for (const pfx of ['color.', 'sidebar.', '']) {
-      const bg = resolved[pfx + name.charAt(0).toLowerCase() + name.slice(1)];
-      if (bg && isHex(bg)) return [hex, bg];
-    }
-  }
-  if (key.endsWith('ForegroundOn')) {
-    const base = key.slice(0, -'ForegroundOn'.length);
-    for (const pfx of ['color.', 'sidebar.', '']) {
-      const fg = resolved[pfx + base + '-foreground'];
-      if (fg && isHex(fg)) return [fg, hex];
-    }
-  }
-  return null;
 }
 
 const GENERATOR_PREFIXES = [

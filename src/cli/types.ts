@@ -22,7 +22,6 @@ export interface LintResult {
 export interface TokenChange {
   token: string;
   type: 'added' | 'removed' | 'modified';
-  field: 'value' | 'description' | 'extensions';
   before?: string;
   after?: string;
   wcagImpact?: {
