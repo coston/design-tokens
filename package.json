@@ -14,6 +14,9 @@
     "./tokens.css": "./dist/tokens.css",
     "./*": "./dist/*"
   },
+  "bin": {
+    "design-tokens": "./dist/cli/index.js"
+  },
   "files": [
     "dist",
     "tailwind.css"
@@ -23,6 +26,7 @@
   ],
   "scripts": {
     "build": "tsc && tsx src/build/index.ts",
+    "cli": "tsx src/cli/index.ts",
     "build:all": "npm run build && npm run demo:build",
     "test": "vitest run",
     "test:watch": "vitest",
