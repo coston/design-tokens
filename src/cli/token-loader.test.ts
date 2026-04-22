@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { loadTokensFromDisk, loadTokensFromGitRef } from './token-loader.js';
+import { loadTokensFromDisk, loadTokensFromGitRef, matchesGlob } from './token-loader.js';
 import { writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -88,6 +88,35 @@ describe('loadTokensFromDisk', () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe('matchesGlob', () => {
+  it('matches exact file paths', () => {
+    expect(matchesGlob('/base/foo.json', '/base', 'foo.json')).toBe(true);
+    expect(matchesGlob('/base/foo.json', '/base', 'bar.json')).toBe(false);
+  });
+
+  it('matches single * wildcard', () => {
+    expect(matchesGlob('/base/tokens/core.json', '/base', 'tokens/*.json')).toBe(true);
+    expect(matchesGlob('/base/tokens/deep/core.json', '/base', 'tokens/*.json')).toBe(false);
+  });
+
+  it('matches ** glob-star across directories', () => {
+    expect(matchesGlob('/base/tokens/core.json', '/base', '**/*.json')).toBe(true);
+    expect(matchesGlob('/base/tokens/deep/core.json', '/base', '**/*.json')).toBe(true);
+    expect(matchesGlob('/base/tokens/deep/core.json', '/base', 'tokens/**/*.json')).toBe(true);
+    expect(matchesGlob('/base/tokens/core.ts', '/base', '**/*.json')).toBe(false);
+  });
+
+  it('matches ? single-character wildcard', () => {
+    expect(matchesGlob('/base/a.json', '/base', '?.json')).toBe(true);
+    expect(matchesGlob('/base/ab.json', '/base', '?.json')).toBe(false);
+  });
+
+  it('matches patterns like tokens/*/core.json', () => {
+    expect(matchesGlob('/base/tokens/light/core.json', '/base', 'tokens/*/core.json')).toBe(true);
+    expect(matchesGlob('/base/tokens/core.json', '/base', 'tokens/*/core.json')).toBe(false);
   });
 });
 

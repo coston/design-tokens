@@ -13,16 +13,19 @@ import { runFix } from './fix.js';
 import { formatLintResult, formatDiffResult, formatFixResult } from './formatters.js';
 import { generateThemeFromColor } from '../build/utils/theme-generator.js';
 import { hexToOKLCH } from '../build/utils/color-utils.js';
-import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 interface Flags {
   json: boolean;
   check: boolean;
   help: boolean;
+  version: boolean;
   noDark: boolean;
   rules?: string[];
   outDir?: string;
+  dir?: string;
   hueRange?: number;
   chromaScale?: number;
 }
@@ -31,14 +34,16 @@ function parseArgs(argv: string[]): { command: string; positionals: string[]; fl
   const args = argv.slice(2);
   const command = args[0] ?? '';
   const positionals: string[] = [];
-  const flags: Flags = { json: false, check: false, help: false, noDark: false };
+  const flags: Flags = { json: false, check: false, help: false, version: false, noDark: false };
 
   for (let i = 1; i < args.length; i++) {
     const arg = args[i];
     if (arg === '--json') flags.json = true;
     else if (arg === '--check') flags.check = true;
     else if (arg === '--help' || arg === '-h') flags.help = true;
+    else if (arg === '--version' || arg === '-v') flags.version = true;
     else if (arg === '--no-dark') flags.noDark = true;
+    else if (arg === '--dir' && i + 1 < args.length) flags.dir = args[++i];
     else if (arg === '--rule' && i + 1 < args.length) {
       flags.rules = flags.rules ?? [];
       flags.rules.push(args[++i]);
@@ -52,6 +57,17 @@ function parseArgs(argv: string[]): { command: string; positionals: string[]; fl
   return { command, positionals, flags };
 }
 
+function getVersion(): string {
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  const pkgPath = join(__dirname, '..', '..', 'package.json');
+  try {
+    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version: string };
+    return pkg.version;
+  } catch {
+    return 'unknown';
+  }
+}
+
 function printHelp(): void {
   console.log(
     `
@@ -60,7 +76,7 @@ design-tokens - Init, lint, diff, and fix W3C DTCG token files
 Usage:
   design-tokens init <color>            Generate tokens from a base color
   design-tokens lint [dir]              Validate token files
-  design-tokens diff [ref]              Compare tokens against a git ref
+  design-tokens diff [ref] [--dir dir]  Compare tokens against a git ref
   design-tokens fix [dir]               Auto-generate derivable metadata
 
 Init flags:
@@ -74,13 +90,14 @@ Lint flags:
   --rule <name>      Run only specific rule(s) (can repeat)
 
 Diff flags:
-  (no additional flags)
+  --dir <dir>        Token directory to compare (default: .)
 
 Fix flags:
   --check            Dry run, exit 1 if anything is stale
 
 Global flags:
   --json             Output as JSON
+  --version, -v      Show version
   --help, -h         Show this help
 `.trim()
   );
@@ -88,6 +105,11 @@ Global flags:
 
 function main(): void {
   const { command, positionals, flags } = parseArgs(process.argv);
+
+  if (flags.version || command === '--version' || command === '-v') {
+    console.log(getVersion());
+    process.exit(0);
+  }
 
   if (flags.help || !command || command === '--help' || command === '-h') {
     printHelp();
@@ -177,7 +199,7 @@ function main(): void {
     }
     case 'diff': {
       const ref = positionals[0] ?? 'HEAD~1';
-      const dir = positionals[1] ?? '.';
+      const dir = flags.dir ?? positionals[1] ?? '.';
       const config = loadConfig(dir);
       const current = loadTokensFromDisk(dir, config);
       const baseline = loadTokensFromGitRef(dir, ref, config);

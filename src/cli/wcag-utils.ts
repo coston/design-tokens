@@ -5,6 +5,9 @@
 
 import type { FlatTokens } from '../build/utils/types.js';
 
+// Strictly 6-digit hex only — 8-digit (alpha) hex is intentionally excluded
+// because WCAG contrast calculations require fully opaque colors.
+// inferType() in fix.ts accepts 6- and 8-digit hex for $type inference.
 export function isHex(v: string): boolean {
   return /^#[0-9a-fA-F]{6}$/.test(v);
 }

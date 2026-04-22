@@ -104,14 +104,14 @@ describe('runFix', () => {
 
   describe('check mode', () => {
     it('does not mutate raw files in check mode', () => {
-      const raw = { color: { $value: '#000' } };
+      const raw = { color: { $value: '#000' } } as Record<string, unknown>;
       const rawFiles = new Map<string, Record<string, unknown>>([['file.json', raw]]);
       const tokens = makeTokens({ rawFiles, resolved: { color: '#000000' } });
-      runFix(tokens, { check: true });
-      // $extensions should not be added to the original in check mode...
-      // Actually the function mutates in-memory but skips writeFileSync.
-      // This test verifies the result indicates staleness.
-      expect(raw.color).toBeDefined();
+      const result = runFix(tokens, { check: true });
+      expect(result.stale).toBe(true);
+      // Original object must not be mutated
+      expect((raw.color as Record<string, unknown>).$extensions).toBeUndefined();
+      expect((raw.color as Record<string, unknown>).$type).toBeUndefined();
     });
 
     it('returns stale=false when nothing to fix', () => {

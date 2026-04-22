@@ -4,7 +4,14 @@
 
 import type { LintIssue, LintResult, LoadedTokens, Config } from './types.js';
 import type { FlatTokens } from '../build/utils/types.js';
-import { isHex, hexContrast, wcagLevel, resolveAnnotationPair } from './wcag-utils.js';
+import {
+  isHex,
+  hexContrast,
+  wcagLevel,
+  roundedContrast,
+  resolveAnnotationPair,
+} from './wcag-utils.js';
+import { walkTokenNodes } from './walk.js';
 
 // ---------------------------------------------------------------------------
 // Rules
@@ -76,49 +83,37 @@ function staleAnnotations(
   rawFiles: Map<string, Record<string, unknown>>
 ): LintIssue[] {
   const issues: LintIssue[] = [];
-  for (const [, content] of rawFiles) walkCheck(content, '', resolved, issues);
-  return issues;
-}
-
-function walkCheck(
-  node: Record<string, unknown>,
-  path: string,
-  resolved: FlatTokens,
-  issues: LintIssue[]
-): void {
-  if ('$value' in node) {
-    const ext = node.$extensions as Record<string, unknown> | undefined;
-    if (!ext) return;
-    for (const vd of Object.values(ext)) {
-      if (typeof vd !== 'object' || vd === null) continue;
-      const wcag = (vd as Record<string, unknown>).wcag as Record<string, unknown> | undefined;
-      if (!wcag) continue;
-      for (const [key, entry] of Object.entries(wcag)) {
-        if (typeof entry !== 'object' || entry === null) continue;
-        const e = entry as Record<string, unknown>;
-        if (typeof e.ratio !== 'number') continue;
-        const pair = resolveAnnotationPair(key, path, resolved);
-        if (!pair) continue;
-        const [fg, bg] = pair;
-        if (!isHex(fg) || !isHex(bg)) continue;
-        const computed = Math.round(hexContrast(fg, bg) * 100) / 100;
-        const level = wcagLevel(computed);
-        if (e.ratio !== computed || e.level !== level) {
-          issues.push({
-            rule: 'stale-annotations',
-            severity: 'warning',
-            token: path,
-            message: `Stale WCAG annotation [${key}]: source says ${e.ratio}:1 (${e.level}), computed ${computed}:1 (${level})`,
-          });
+  for (const [, content] of rawFiles) {
+    walkTokenNodes(content, '', (node, path) => {
+      const ext = node.$extensions as Record<string, unknown> | undefined;
+      if (!ext) return;
+      for (const vd of Object.values(ext)) {
+        if (typeof vd !== 'object' || vd === null) continue;
+        const wcag = (vd as Record<string, unknown>).wcag as Record<string, unknown> | undefined;
+        if (!wcag) continue;
+        for (const [key, entry] of Object.entries(wcag)) {
+          if (typeof entry !== 'object' || entry === null) continue;
+          const e = entry as Record<string, unknown>;
+          if (typeof e.ratio !== 'number') continue;
+          const pair = resolveAnnotationPair(key, path, resolved);
+          if (!pair) continue;
+          const [fg, bg] = pair;
+          if (!isHex(fg) || !isHex(bg)) continue;
+          const computed = roundedContrast(fg, bg);
+          const level = wcagLevel(computed);
+          if (e.ratio !== computed || e.level !== level) {
+            issues.push({
+              rule: 'stale-annotations',
+              severity: 'warning',
+              token: path,
+              message: `Stale WCAG annotation [${key}]: source says ${e.ratio}:1 (${e.level}), computed ${computed}:1 (${level})`,
+            });
+          }
         }
       }
-    }
-    return;
+    });
   }
-  for (const [k, v] of Object.entries(node)) {
-    if (k.startsWith('$') || typeof v !== 'object' || v === null) continue;
-    walkCheck(v as Record<string, unknown>, path ? `${path}.${k}` : k, resolved, issues);
-  }
+  return issues;
 }
 
 const GENERATOR_PREFIXES = [
@@ -163,32 +158,25 @@ function orphanedTokens(
 
 function missingMetadata(rawFiles: Map<string, Record<string, unknown>>): LintIssue[] {
   const issues: LintIssue[] = [];
-  for (const [, content] of rawFiles) walkMeta(content, '', issues);
+  for (const [, content] of rawFiles) {
+    walkTokenNodes(content, '', (node, path) => {
+      if (!node.$description)
+        issues.push({
+          rule: 'missing-metadata',
+          severity: 'warning',
+          token: path,
+          message: 'Token is missing $description',
+        });
+      if (!node.$type)
+        issues.push({
+          rule: 'missing-metadata',
+          severity: 'warning',
+          token: path,
+          message: 'Token is missing $type',
+        });
+    });
+  }
   return issues;
-}
-
-function walkMeta(node: Record<string, unknown>, path: string, issues: LintIssue[]): void {
-  if ('$value' in node) {
-    if (!node.$description)
-      issues.push({
-        rule: 'missing-metadata',
-        severity: 'warning',
-        token: path,
-        message: 'Token is missing $description',
-      });
-    if (!node.$type)
-      issues.push({
-        rule: 'missing-metadata',
-        severity: 'warning',
-        token: path,
-        message: 'Token is missing $type',
-      });
-    return;
-  }
-  for (const [k, v] of Object.entries(node)) {
-    if (k.startsWith('$') || typeof v !== 'object' || v === null) continue;
-    walkMeta(v as Record<string, unknown>, path ? `${path}.${k}` : k, issues);
-  }
 }
 
 const EXPECTED_ROLES = [

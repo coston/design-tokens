@@ -45,16 +45,40 @@ function findJsonFiles(dir: string): string[] {
   return results;
 }
 
-function matchesGlob(filePath: string, baseDir: string, pattern: string): boolean {
-  const rel = relative(baseDir, filePath);
-  const parts = pattern.split('*');
-  if (parts.length === 1) return rel === pattern;
-  if (parts.length === 2) {
-    const [prefix, suffix] = parts;
-    return rel.startsWith(prefix) && rel.endsWith(suffix);
+/**
+ * Convert a glob pattern to a RegExp. Supports:
+ * - `**` matches any number of path segments (including zero)
+ * - `*`  matches anything except path separators
+ * - `?`  matches a single non-separator character
+ * - Literal characters are escaped for safe regex use
+ */
+function globToRegExp(pattern: string): RegExp {
+  let re = '';
+  let i = 0;
+  while (i < pattern.length) {
+    if (pattern[i] === '*' && pattern[i + 1] === '*') {
+      // ** matches zero or more path segments
+      re += '.*';
+      i += 2;
+      // skip trailing slash after **
+      if (pattern[i] === '/') i++;
+    } else if (pattern[i] === '*') {
+      re += '[^/]*';
+      i++;
+    } else if (pattern[i] === '?') {
+      re += '[^/]';
+      i++;
+    } else {
+      re += pattern[i].replace(/[.+^${}()|[\]\\]/g, '\\$&');
+      i++;
+    }
   }
-  // Multi-glob: just check prefix and suffix
-  return rel.startsWith(parts[0]) && rel.endsWith(parts[parts.length - 1]);
+  return new RegExp(`^${re}$`);
+}
+
+export function matchesGlob(filePath: string, baseDir: string, pattern: string): boolean {
+  const rel = relative(baseDir, filePath);
+  return globToRegExp(pattern).test(rel);
 }
 
 function discoverTokenFiles(dir: string, config?: Config): string[] {
