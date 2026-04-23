@@ -1,6 +1,6 @@
 # @coston/design-tokens
 
-Production-ready CSS design tokens built with OKLCH colors. Framework-agnostic, semantic naming, and built-in light/dark themes.
+Production-ready CSS design tokens built with OKLCH colors. Framework-agnostic, semantic naming, built-in light/dark themes, and a CLI for generating, linting, and maintaining W3C DTCG token files.
 
 ## Features
 
@@ -12,6 +12,7 @@ Production-ready CSS design tokens built with OKLCH colors. Framework-agnostic, 
 - **WCAG Validated** - Automatic contrast checking
 - **TypeScript Support** - Full type definitions included
 - **Optional Tailwind** - Pre-built integration if you want utility classes
+- **CLI Tools** - `init`, `lint`, `diff`, `fix` commands for W3C DTCG token files
 
 ## Quick Start
 
@@ -145,12 +146,121 @@ console.log(theme.dark.background); // "oklch(0.137 0 0)"
 
 This generates a mathematically balanced theme with proper contrast ratios for both light and dark modes.
 
+## CLI
+
+The package includes a CLI for generating, validating, and maintaining W3C DTCG token files.
+
+### `design-tokens init <color>`
+
+Generate a complete token set from a single base color:
+
+```bash
+# From a hex color
+design-tokens init "#0461DE"
+
+# From an OKLCH color
+design-tokens init "oklch(0.6 0.175 240)"
+
+# Custom output directory, no dark theme
+design-tokens init "#0461DE" --out ./src/tokens --no-dark
+
+# Adjust color theory parameters
+design-tokens init "#0461DE" --hue-range 30 --chroma-scale 0.8
+```
+
+Generates W3C DTCG JSON files with 34 semantic color tokens per theme (light and dark), including all foreground pairs, chart colors, and sidebar variants. All foreground/background pairs are WCAG AA contrast-enforced.
+
+### `design-tokens lint [dir]`
+
+Validate token files without generating output:
+
+```bash
+design-tokens lint                     # Current directory
+design-tokens lint ./tokens            # Specific directory
+design-tokens lint --rule wcag-contrast  # Single rule
+design-tokens lint --json              # JSON output for CI
+```
+
+**Rules:**
+
+| Rule                     | Severity | Description                                         |
+| ------------------------ | -------- | --------------------------------------------------- |
+| `broken-references`      | error    | Unresolved `{token.path}` references                |
+| `wcag-contrast`          | error    | Foreground/background pairs failing WCAG AA (4.5:1) |
+| `missing-pairs`          | warning  | Background token without `-foreground` sibling      |
+| `stale-annotations`      | warning  | WCAG annotation data doesn't match computed values  |
+| `orphaned-tokens`        | warning  | Tokens never referenced by semantic tokens          |
+| `missing-metadata`       | warning  | Tokens missing `$description` or `$type`            |
+| `missing-semantic-roles` | warning  | No primary/background/foreground tokens defined     |
+
+**Exit codes:** 0 = pass, 1 = errors, 2 = warnings only.
+
+### `design-tokens diff [ref]`
+
+Compare current tokens against a git ref:
+
+```bash
+design-tokens diff                     # Compare against HEAD~1
+design-tokens diff v0.2.0              # Compare against a tag
+design-tokens diff main                # Compare against a branch
+design-tokens diff HEAD~3 --json       # JSON output
+```
+
+Shows added, removed, and modified tokens with WCAG contrast impact for color changes.
+
+### `design-tokens fix [dir]`
+
+Auto-update derivable metadata in token source files:
+
+```bash
+design-tokens fix                      # Fix in place
+design-tokens fix --check              # Dry run (exit 1 if stale)
+design-tokens fix --check --json       # CI mode
+```
+
+**Operations:**
+
+- Updates WCAG annotation ratios/levels in `$extensions.*.wcag` blocks
+- Scaffolds missing `$extensions` blocks
+- Infers missing `$type` from `$value` (hex/oklch = "color", px/rem = "dimension")
+
+### Programmatic API
+
+All CLI commands are available as importable functions:
+
+```typescript
+import { generateThemeFromColor } from '@coston/design-tokens';
+
+// Theme generation (used by init command)
+const theme = generateThemeFromColor({
+  baseColor: 'oklch(0.6 0.175 240)',
+  hueRange: 20,
+});
+// Returns { light: Record<string, string>, dark: Record<string, string> }
+```
+
+### Config File
+
+Create `design-tokens.config.json` in your project root to customize lint behavior:
+
+```json
+{
+  "tokenPaths": ["tokens/core/*.json", "tokens/semantic/*.json"],
+  "lint": {
+    "orphanAllowlist": ["brand.tan", "brand.ui-cyan"],
+    "contrastMinimum": 4.5,
+    "ignorePaths": ["tokens/experimental/**"]
+  }
+}
+```
+
 ## Package Exports
 
-- `@coston/design-tokens` - Theme generation utility (`generateThemeFromColor`)
+- `@coston/design-tokens` - Theme generation API (`generateThemeFromColor`)
 - `@coston/design-tokens/tokens.json` - Token data (core, semantic, themes)
 - `@coston/design-tokens/tokens.css` - Pure CSS variables
 - `@coston/design-tokens/tailwind.css` - Tailwind utility classes
+- `design-tokens` (CLI) - `init`, `lint`, `diff`, `fix` commands
 
 ## Demo
 
