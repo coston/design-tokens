@@ -155,7 +155,13 @@ describe('Public API Contract', () => {
     it('should produce pure grays when baseColor has zero chroma', () => {
       const theme = generateMonochromaticTheme({ baseColor: 'oklch(0 0 0)' });
       const nonChartTokens = Object.entries(theme.light).filter(
-        ([k]) => !k.startsWith('chart') && !k.includes('destructive') && k !== 'sidebar-primary'
+        ([k]) =>
+          !k.startsWith('chart') &&
+          !k.includes('destructive') &&
+          !k.includes('success') &&
+          !k.includes('warning') &&
+          !k.includes('info') &&
+          k !== 'sidebar-primary'
       );
       for (const [key, value] of nonChartTokens) {
         expect(parseOKLCH(value).c, key).toBe(0);

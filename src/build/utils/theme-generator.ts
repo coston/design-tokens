@@ -174,6 +174,9 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
   );
 
   const destructiveHue = useComplementary ? 180 : 20 - baseHue;
+  const successHue = 150 - baseHue;
+  const warningHue = 85 - baseHue;
+  const infoHue = 240 - baseHue;
 
   interface PaletteSpec {
     readonly key: string;
@@ -308,6 +311,33 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
         destructiveHue
       ),
 
+      // Success (green — absolute hue 150)
+      createEntry('success', modeValue(mode, 0.55, 0.65), modeValue(mode, 0.15, 0.13), successHue),
+      createEntry(
+        'success-foreground',
+        modeValue(mode, 0.98, 0.12),
+        modeValue(mode, 0.02, 0.05),
+        successHue
+      ),
+
+      // Warning (yellow — absolute hue 85, needs dark foreground)
+      createEntry('warning', modeValue(mode, 0.82, 0.78), modeValue(mode, 0.15, 0.13), warningHue),
+      createEntry(
+        'warning-foreground',
+        modeValue(mode, 0.2, 0.15),
+        modeValue(mode, 0.02, 0.05),
+        warningHue
+      ),
+
+      // Info (blue — absolute hue 240)
+      createEntry('info', modeValue(mode, 0.55, 0.65), modeValue(mode, 0.15, 0.13), infoHue),
+      createEntry(
+        'info-foreground',
+        modeValue(mode, 0.98, 0.12),
+        modeValue(mode, 0.02, 0.05),
+        infoHue
+      ),
+
       // UI elements
       createEntry(
         'border',
@@ -401,6 +431,9 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
     { fg: 'primary-foreground', bg: 'primary', ratio: 4.5 },
     { fg: 'accent-foreground', bg: 'accent', ratio: 4.5 },
     { fg: 'destructive-foreground', bg: 'destructive', ratio: 4.5 },
+    { fg: 'success-foreground', bg: 'success', ratio: 4.5 },
+    { fg: 'warning-foreground', bg: 'warning', ratio: 4.5 },
+    { fg: 'info-foreground', bg: 'info', ratio: 4.5 },
     { fg: 'sidebar-foreground', bg: 'sidebar-background', ratio: 4.5 },
     { fg: 'sidebar-primary-foreground', bg: 'sidebar-primary', ratio: 4.5 },
     { fg: 'sidebar-accent-foreground', bg: 'sidebar-accent', ratio: 4.5 },
@@ -498,6 +531,12 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
     'accent-foreground': mkColor(0.205),
     destructive: 'oklch(0.577 0.245 27.325)',
     'destructive-foreground': mkColor(0.97, 0),
+    success: 'oklch(0.55 0.15 150)',
+    'success-foreground': mkColor(0.97, 0),
+    warning: 'oklch(0.82 0.15 85)',
+    'warning-foreground': mkColor(0.2, 0),
+    info: 'oklch(0.55 0.15 240)',
+    'info-foreground': mkColor(0.97, 0),
     border: mkColor(0.88, tintAt(0.88, 0.4)),
     input: mkColor(0.88, tintAt(0.88, 0.4)),
     ring: mkColor(0.6),
@@ -546,6 +585,12 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
     'accent-foreground': mkColor(0.97),
     destructive: 'oklch(0.396 0.141 25.723)',
     'destructive-foreground': mkColor(0.97, 0),
+    success: 'oklch(0.65 0.13 150)',
+    'success-foreground': mkColor(0.97, 0),
+    warning: 'oklch(0.78 0.13 85)',
+    'warning-foreground': mkColor(0.15, 0),
+    info: 'oklch(0.65 0.13 240)',
+    'info-foreground': mkColor(0.97, 0),
     border: mkColor(dkSub),
     input: mkColor(dkSub),
     ring: mkColor(dkRng),
