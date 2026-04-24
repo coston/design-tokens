@@ -176,7 +176,6 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
   const destructiveHue = useComplementary ? 180 : 20 - baseHue;
   const successHue = 150 - baseHue;
   const warningHue = 85 - baseHue;
-  const infoHue = 240 - baseHue;
 
   interface PaletteSpec {
     readonly key: string;
@@ -329,14 +328,9 @@ export function generateThemeFromColor(options: ThemeGeneratorOptions): Generate
         warningHue
       ),
 
-      // Info (blue — absolute hue 240)
-      createEntry('info', modeValue(mode, 0.55, 0.65), modeValue(mode, 0.15, 0.13), infoHue),
-      createEntry(
-        'info-foreground',
-        modeValue(mode, 0.98, 0.12),
-        modeValue(mode, 0.02, 0.05),
-        infoHue
-      ),
+      // Info (plain neutral — no semantic hue)
+      createEntry('info', modeValue(mode, 0.88, 0.28), 0, 0),
+      createEntry('info-foreground', modeValue(mode, 0.2, 0.92), 0, 0),
 
       // UI elements
       createEntry(
@@ -535,8 +529,8 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
     'success-foreground': mkColor(0.97, 0),
     warning: 'oklch(0.82 0.15 85)',
     'warning-foreground': mkColor(0.2, 0),
-    info: 'oklch(0.55 0.15 240)',
-    'info-foreground': mkColor(0.97, 0),
+    info: mkColor(0.88, 0),
+    'info-foreground': mkColor(0.2, 0),
     border: mkColor(0.88, tintAt(0.88, 0.4)),
     input: mkColor(0.88, tintAt(0.88, 0.4)),
     ring: mkColor(0.6),
@@ -589,8 +583,8 @@ export function generateMonochromaticTheme(options: ThemeGeneratorOptions): Gene
     'success-foreground': mkColor(0.97, 0),
     warning: 'oklch(0.78 0.13 85)',
     'warning-foreground': mkColor(0.15, 0),
-    info: 'oklch(0.65 0.13 240)',
-    'info-foreground': mkColor(0.97, 0),
+    info: mkColor(0.28, 0),
+    'info-foreground': mkColor(0.92, 0),
     border: mkColor(dkSub),
     input: mkColor(dkSub),
     ring: mkColor(dkRng),

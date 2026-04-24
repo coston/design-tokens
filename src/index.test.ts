@@ -160,7 +160,6 @@ describe('Public API Contract', () => {
           !k.includes('destructive') &&
           !k.includes('success') &&
           !k.includes('warning') &&
-          !k.includes('info') &&
           k !== 'sidebar-primary'
       );
       for (const [key, value] of nonChartTokens) {
