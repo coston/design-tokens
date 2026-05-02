@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && cp -f public/.nojekyll dist/.nojekyll || echo '.nojekyll not required'",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "playwright test"
   },
   "dependencies": {
     "@coston/design-tokens": "file:..",
-    "@coston/ui": "^0.1.0",
+    "@coston/ui": "^0.2.1",
     "@tanstack/react-table": "^8.21.3",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
